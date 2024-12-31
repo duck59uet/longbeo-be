@@ -18,8 +18,8 @@ export class UserService {
   async getUserInfo(): Promise<ResponseDto<User>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      const address = authInfo.address;
-      const user = await this.userRepo.getUserByAddress(address);
+      const username = authInfo.username;
+      const user = await this.userRepo.getUser(username);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);

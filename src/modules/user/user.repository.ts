@@ -34,15 +34,13 @@ export class UserRepository {
     });
   }
 
-  async getUserByAddress(address: string): Promise<User> {
+  async getUser(username: string): Promise<User> {
     const qb = this.repo
       .createQueryBuilder('users')
       .where({
+        username,
         deletedAt: IsNull(),
       })
-      .andWhere(`users.wallet ilike :addr`, {
-        addr: address,
-      });
 
     return qb.getOne();
   }
@@ -61,5 +59,11 @@ export class UserRepository {
     user.email = email;
     user.password = encryptedPassword;
     return await this.repo.save(user);
+  }
+
+  async verifyUser(userName: string, password: string): Promise<boolean> {
+    const user = await this.repo.findOne({where: {username: userName}});
+    const hashedInput = CryptoJS.AES.encrypt(password, this.salt).toString();
+    return hashedInput === user.password;
   }
 }

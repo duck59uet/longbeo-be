@@ -1,16 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class Web3LoginDTO {
+export class LoginDTO {
   @ApiProperty({ required: true })
   @IsString()
-  addr: string;
+  username: string;
 
   @ApiProperty({ required: true })
   @IsString()
-  message: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  signature: string;
+  password: string;
 }

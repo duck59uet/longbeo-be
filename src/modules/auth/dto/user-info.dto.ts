@@ -3,7 +3,7 @@ import { UserRole } from '../../user/entities/user.entity';
 export class UserInfoDto {
   id: string;
 
-  address: string;
+  username: string;
 
   role: UserRole;
 }
