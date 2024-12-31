@@ -1,0 +1,22 @@
+services:
+
+  postgres:
+    container_name: longbeo
+    image: postgres:14.0
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=X#wxpACw@c!WwUwb
+      - POSTGRES_DB=longbeo
+    ports:
+      - "5432:5432"
+    volumes:
+      - longbeo_data:/var/lib/postgresql/data
+
+volumes:
+  longbeo_data:
+    driver: local
+
+networks:
+  default:
+    name: longbeo

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@zcoin/zcoin/*": [
+        "src/*"
+      ],
+    }
+  }
+}

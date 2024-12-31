@@ -1,0 +1,65 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IsNull, Repository } from 'typeorm';
+import { User, UserRole } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import CryptoJS from 'crypto-js' 
+
+@Injectable()
+export class UserRepository {
+  private readonly logger = new Logger(UserRepository.name);
+  private salt: string;
+
+  constructor(
+    @InjectRepository(User)
+    private readonly repo: Repository<User>,
+    private configService: ConfigService
+  ) {
+    this.logger.log(
+      '============== Constructor User Repository ==============',
+    );
+    this.salt = this.configService.get<string>('SALT');
+  }
+
+  /**
+   * getUsers
+   * @param limit
+   * @param skip
+   * @returns
+   */
+  getUsers(limit: number, skip: number): Promise<User[]> {
+    return this.repo.find({
+      take: limit,
+      skip,
+    });
+  }
+
+  async getUserByAddress(address: string): Promise<User> {
+    const qb = this.repo
+      .createQueryBuilder('users')
+      .where({
+        deletedAt: IsNull(),
+      })
+      .andWhere(`users.wallet ilike :addr`, {
+        addr: address,
+      });
+
+    return qb.getOne();
+  }
+
+  async createUser(
+    userName: string,
+    fullName: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
+    const encryptedPassword = CryptoJS.AES.encrypt(password, this.salt).toString();
+    const user = new User();
+    user.username = userName;
+    user.fullName = fullName;
+    user.role = UserRole.USER;
+    user.email = email;
+    user.password = encryptedPassword;
+    return await this.repo.save(user);
+  }
+}
