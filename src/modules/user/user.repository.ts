@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import CryptoJS from 'crypto-js' 
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -51,19 +51,22 @@ export class UserRepository {
     email: string,
     password: string,
   ): Promise<User> {
-    const encryptedPassword = CryptoJS.AES.encrypt(password, this.salt).toString();
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     const user = new User();
     user.username = userName;
     user.fullName = fullName;
     user.role = UserRole.USER;
     user.email = email;
-    user.password = encryptedPassword;
+    user.password = hashedPassword;
     return await this.repo.save(user);
   }
 
   async verifyUser(userName: string, password: string): Promise<boolean> {
     const user = await this.repo.findOne({where: {username: userName}});
-    const hashedInput = CryptoJS.AES.encrypt(password, this.salt).toString();
-    return hashedInput === user.password;
+    if (!user) {
+      return false;
+    }
+    return await bcrypt.compare(password, user.password);
   }
 }
