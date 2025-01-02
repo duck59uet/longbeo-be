@@ -27,6 +27,10 @@ export const ErrorMap = {
     Code: 'E001',
     Message: 'User not found',
   },
+  USER_EXIST: {
+    Code: 'E002',
+    Message: 'User already exists',
+  },
   E500: {
     Code: 'E500',
     Message: 'Server error',
