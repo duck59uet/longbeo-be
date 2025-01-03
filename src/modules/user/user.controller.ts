@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.req';
 import { UpdateUserDto } from './dto/request/update-user.req';
 import { GetUserPathParamDto } from './dto/request/get-user.req';
+import { ChangePasswordDto } from './dto/request/change-password';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -67,5 +68,22 @@ export class UserController {
   ) {
     this.logger.log('========== update user ==========');
     return this.userService.updateUser(body);
+  }
+
+  @CommonAuthPost({
+    url: URL_CONSTANTS.CHANGE_PASSWORD,
+    summary: 'Change password',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Change password',
+      schema: {},
+    },
+  })
+  async changePassword(
+    @Body() body: ChangePasswordDto,
+  ) {
+    this.logger.log('========== Change password ==========');
+    return this.userService.changePassword(body);
   }
 }

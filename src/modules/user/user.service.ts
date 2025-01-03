@@ -5,8 +5,9 @@ import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateUserDto } from './dto/request/create-user.req';
-import { GetUserPathParamDto } from './dto/request/get-user.req';
+import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/request/update-user.req';
+import { ChangePasswordDto } from './dto/request/change-password';
 
 @Injectable()
 export class UserService {
@@ -68,6 +69,42 @@ export class UserService {
       user.fullname = fullname;
       user.avatar = avatar;
       user.facebook = facebook;
+
+      const data = await this.userRepo.repo.save(user);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async changePassword(body: ChangePasswordDto): Promise<ResponseDto<User>> {
+    try {
+      const userId = this.commonUtil.getAuthInfo().id;
+
+      const user = await this.userRepo.repo.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      const { oldPassword, newPassword } = body;
+
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.WRONG_PASSWORD,
+        );
+      }
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+      user.password = hashedPassword;
 
       const data = await this.userRepo.repo.save(user);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
