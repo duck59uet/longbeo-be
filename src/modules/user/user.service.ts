@@ -5,6 +5,8 @@ import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateUserDto } from './dto/request/create-user.req';
+import { GetUserPathParamDto } from './dto/request/get-user.req';
+import { UpdateUserDto } from './dto/request/update-user.req';
 
 @Injectable()
 export class UserService {
@@ -34,8 +36,40 @@ export class UserService {
         return ResponseDto.responseError(UserService.name, ErrorMap.USER_EXIST);
       }
 
-      const user = await this.userRepo.createUser(username, fullname, email, password);
+      const user = await this.userRepo.createUser(
+        username,
+        fullname,
+        email,
+        password,
+      );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async updateUser(body: UpdateUserDto): Promise<ResponseDto<User>> {
+    try {
+      const userId = this.commonUtil.getAuthInfo().id;
+
+      const user = await this.userRepo.repo.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      const { fullname, avatar, facebook } = body;
+
+      user.fullname = fullname;
+      user.avatar = avatar;
+      user.facebook = facebook;
+
+      await this.userRepo.repo.save(user);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }

@@ -12,7 +12,7 @@ export class UserRepository {
 
   constructor(
     @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    public repo: Repository<User>,
     private configService: ConfigService
   ) {
     this.logger.log(

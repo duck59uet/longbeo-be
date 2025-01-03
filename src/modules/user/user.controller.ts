@@ -1,13 +1,19 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
   URL_CONSTANTS,
 } from '../../common/constants/api.constant';
-import { CommonAuthGet, CommonAuthPost, CommonPost } from '../../decorators/common.decorator';
+import {
+  CommonAuthGet,
+  CommonAuthPost,
+  CommonPost,
+} from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.req';
+import { UpdateUserDto } from './dto/request/update-user.req';
+import { GetUserPathParamDto } from './dto/request/get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -44,5 +50,22 @@ export class UserController {
   async createUser(@Body() body: CreateUserDto) {
     this.logger.log('========== create new user ==========');
     return this.userService.createUser(body);
+  }
+
+  @CommonAuthPost({
+    url: URL_CONSTANTS.UPDATE_USER,
+    summary: 'Update user',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'update user',
+      schema: {},
+    },
+  })
+  async updateUser(
+    @Body() body: UpdateUserDto,
+  ) {
+    this.logger.log('========== update user ==========');
+    return this.userService.updateUser(body);
   }
 }
