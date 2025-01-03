@@ -69,7 +69,8 @@ export class UserService {
       user.avatar = avatar;
       user.facebook = facebook;
 
-      await this.userRepo.repo.save(user);
+      const data = await this.userRepo.repo.save(user);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }
