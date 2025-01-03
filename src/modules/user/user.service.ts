@@ -29,7 +29,7 @@ export class UserService {
     }
   }
 
-  async createUser(request: CreateUserDto): Promise<ResponseDto<User>> {
+  async createUser(request: CreateUserDto): Promise<ResponseDto<any>> {
     try {
       const { username, fullname, email, password } = request;
       const userExist = await this.userRepo.getUser(username);
@@ -43,13 +43,15 @@ export class UserService {
         email,
         password,
       );
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
+
+      const { password: userPassword, ...result } = user;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }
   }
 
-  async updateUser(body: UpdateUserDto): Promise<ResponseDto<User>> {
+  async updateUser(body: UpdateUserDto): Promise<ResponseDto<any>> {
     try {
       const userId = this.commonUtil.getAuthInfo().id;
 
@@ -71,13 +73,15 @@ export class UserService {
       user.facebook = facebook;
 
       const data = await this.userRepo.repo.save(user);
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+
+      const { password, ...result } = data;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }
   }
 
-  async changePassword(body: ChangePasswordDto): Promise<ResponseDto<User>> {
+  async changePassword(body: ChangePasswordDto): Promise<ResponseDto<any>> {
     try {
       const userId = this.commonUtil.getAuthInfo().id;
 
@@ -107,7 +111,9 @@ export class UserService {
       user.password = hashedPassword;
 
       const data = await this.userRepo.repo.save(user);
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+
+      const { password, ...result } = data;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }
