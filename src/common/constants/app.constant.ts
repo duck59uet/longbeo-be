@@ -14,3 +14,13 @@ export enum OrderStatus {
   COMPLETE = 'Complete',
   REJECT = 'Reject',
 }
+
+export enum PaymentMethod {
+  BANK = 'Bank',
+  MOMO = 'Momo',
+}
+
+export enum TopupStatus {
+  COMPLETE = 'Complete',
+  DELETE = 'Delete',
+}

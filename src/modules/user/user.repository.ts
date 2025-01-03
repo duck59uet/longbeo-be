@@ -46,16 +46,16 @@ export class UserRepository {
   }
 
   async createUser(
-    userName: string,
-    fullName: string,
+    username: string,
+    fullname: string,
     email: string,
     password: string,
   ): Promise<User> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const user = new User();
-    user.username = userName;
-    user.fullName = fullName;
+    user.username = username;
+    user.fullname = fullname;
     user.role = UserRole.USER;
     user.email = email;
     user.password = hashedPassword;

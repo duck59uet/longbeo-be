@@ -10,12 +10,12 @@ export class CreateUserDto {
   @Matches(/^[a-zA-Z0-9]+$/, {
     message: 'Username can only contain letters and numbers',
   })
-  userName: string;
+  username: string;
 
   @ApiProperty({
     description: 'Full name',
   })
-  fullName: string;
+  fullname: string;
 
   @ApiProperty({
     description: 'Email',

@@ -2,10 +2,7 @@ export const CONTROLLER_CONSTANTS = {
   AUTH: 'auth',
   USER: 'user',
   ORDER: 'order',
-  COLLECTION: 'collection',
-  UPLOAD: 'upload',
-  COMMENT: 'comment',
-  COMMENT_LIKE: 'comment-like'
+  TOPUP: 'topup',
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',

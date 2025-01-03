@@ -11,7 +11,7 @@ export class User extends BaseEntityAutoId {
   username: string;
 
   @Column({ nullable: false })
-  fullName: string;
+  fullname: string;
 
   @Column({ nullable: true })
   avatar: string;
