@@ -1,28 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Order } from './entities/topup.entity';
-import { CreateOrderDto } from './dto/request/topup.dto';
+import { Topup } from './entities/topup.entity';
+import { CreateTopupDto } from './dto/request/topup.dto';
 
 @Injectable()
-export class OrderRepository {
-  private readonly logger = new Logger(OrderRepository.name);
+export class TopupRepository {
+  private readonly logger = new Logger(TopupRepository.name);
 
   constructor(
-    @InjectRepository(Order)
-    public repo: Repository<Order>,
+    @InjectRepository(Topup)
+    public repo: Repository<Topup>,
   ) {
     this.logger.log(
-      '============== Constructor Order Repository ==============',
+      '============== Constructor Topup Repository ==============',
     );
   }
 
-  async createOrder(createOrderDto: CreateOrderDto, userId: string): Promise<Order> {
-    const order = new Order();
-    order.user_id = userId;
-    order.amount = createOrderDto.amount;
-    order.price = createOrderDto.price;
-    order.service_id = createOrderDto.service_id;
-    return await this.repo.save(order);
+  async createTopup(createOrderDto: CreateTopupDto, userId: string): Promise<Topup> {
+    const topup = new Topup();
+    topup.user_id = createOrderDto.user_id;
+    topup.amount = createOrderDto.amount;
+    topup.admin_id = userId;
+    topup.payment_method = createOrderDto.payment_method;
+    topup.payment_code = createOrderDto.payment_code;
+    topup.sender = createOrderDto.sender;
+    topup.content = createOrderDto.content;
+    topup.status = createOrderDto.status;
+
+    return await this.repo.save(topup);
   }
 }

@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  SetMetadata,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
 import { ResponseDto } from '../common/dtos/response.dto';
+import { UserRole } from '../modules/user/entities/user.entity';
 
 interface Options {
   url?: string;
@@ -58,6 +60,9 @@ export function CommonDelete(options: Options) {
     Delete(options.url),
   );
 }
+
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
 
 export function Common(
   summary: string,

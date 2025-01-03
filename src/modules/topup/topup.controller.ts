@@ -3,23 +3,24 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
 } from '../../common/constants/api.constant';
-import { OrderService } from './topup.service';
+import { TopupService } from './topup.service';
 import {
   CommonAuthPost,
+  Roles,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
-import { CreateOrderDto } from './dto/request/topup.dto';
-import { UpdateOrderDto } from './dto/request/update.dto';
+import { CreateTopupDto } from './dto/request/topup.dto';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller(CONTROLLER_CONSTANTS.TOPUP)
 @ApiTags(CONTROLLER_CONSTANTS.TOPUP)
 export class TopupController {
   public readonly logger = new Logger(TopupController.name);
 
-  constructor(private orderService: OrderService) {}
+  constructor(private topupService: TopupService) {}
   @CommonAuthPost({
-    url: 'order',
-    summary: 'user create order while buy/sell zcoin',
+    url: 'create',
+    summary: 'admin topup user',
     apiOkResponseOptions: {
       status: 200,
       type: ResponseDto,
@@ -27,24 +28,10 @@ export class TopupController {
       schema: {},
     },
   })
+  @Roles(UserRole.ADMIN)
   async createOrder(
-    @Body() createOrderDto: CreateOrderDto,
+    @Body() createOrderDto: CreateTopupDto,
   ): Promise<ResponseDto<any>> {
-    return this.orderService.createOrder(createOrderDto);
-  }
-
-  @CommonAuthPost({
-    url: 'update',
-    summary: 'admin update order',
-    apiOkResponseOptions: {
-      status: 200,
-      type: ResponseDto,
-      description: 'admin update order',
-      schema: {},
-    },
-  })
-  async updateOrder(@Body() body: UpdateOrderDto) {
-    this.logger.log('========== Edit user info ==========');
-    return this.orderService.updateOrder(body);
+    return this.topupService.createTopup(createOrderDto);
   }
 }

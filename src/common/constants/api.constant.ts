@@ -3,6 +3,7 @@ export const CONTROLLER_CONSTANTS = {
   USER: 'user',
   ORDER: 'order',
   TOPUP: 'topup',
+  BALANCE: 'balance',
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',
