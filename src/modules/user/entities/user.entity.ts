@@ -31,6 +31,7 @@ export class User extends BaseEntityAutoId {
   @Column({ nullable: true })
   level: string;
 
+  @Exclude()
   @Column({ nullable: true })
   password: string;
 }
