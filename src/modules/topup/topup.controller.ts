@@ -32,7 +32,7 @@ export class TopupController {
   }
 
   @CommonAuthGet({
-    url: 'user/topup',
+    url: 'user/history',
     summary: 'user get topup history',
     apiOkResponseOptions: {
       status: 200,
