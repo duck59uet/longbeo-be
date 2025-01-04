@@ -17,7 +17,10 @@ export class TopupRepository {
     );
   }
 
-  async createTopup(createOrderDto: CreateTopupDto, userId: string): Promise<Topup> {
+  async createTopup(
+    createOrderDto: CreateTopupDto,
+    userId: string,
+  ): Promise<Topup> {
     const topup = new Topup();
     topup.user_id = createOrderDto.user_id;
     topup.amount = createOrderDto.amount;
@@ -31,11 +34,21 @@ export class TopupRepository {
     return await this.repo.save(topup);
   }
 
-  async getUserTopupHistory(userId: string): Promise<Topup[]> {
-    return this.repo.find({
-      where: {
-        user_id: userId,
-      },
-    });
+  async getUserTopupHistory(
+    userId: string,
+    limit: number,
+    page: number,
+  ): Promise<[number, Topup[]]> {
+    const [itemCount, data] = await Promise.all([
+      this.repo.count({ where: { user_id: userId } }),
+      this.repo
+        .createQueryBuilder('topup')
+        .where('topup.user_id = :userId', { userId })
+        .skip(limit * (page - 1))
+        .take(limit)
+        .getMany(),
+    ]);
+
+    return [itemCount, data];
   }
 }

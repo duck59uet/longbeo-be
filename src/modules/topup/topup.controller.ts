@@ -6,6 +6,7 @@ import { CommonAuthGet, CommonAuthPost, Roles } from '../../decorators/common.de
 import { ResponseDto } from '../../common/dtos';
 import { CreateTopupDto } from './dto/request/topup.dto';
 import { UserRole } from '../user/entities/user.entity';
+import { GetTopupRequestDto } from './dto/request/get-topup.req';
 
 @Controller(CONTROLLER_CONSTANTS.TOPUP)
 @ApiTags(CONTROLLER_CONSTANTS.TOPUP)
@@ -41,7 +42,7 @@ export class TopupController {
     },
   })
   @Roles(UserRole.USER)
-  async getUserTopupHistory(): Promise<ResponseDto<any>> {
+  async getUserTopupHistory(@Query() query: GetTopupRequestDto): Promise<ResponseDto<any>> {
     return this.topupService.getUserTopupHistory();
   }
 }

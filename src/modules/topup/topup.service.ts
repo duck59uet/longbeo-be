@@ -5,6 +5,7 @@ import { TopupRepository } from './topup.repository';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateTopupDto } from './dto/request/topup.dto';
 import { BalanceRepository } from '../balance/balance.repository';
+import { GetTopupRequestDto } from './dto/request/get-topup.req';
 
 @Injectable()
 export class TopupService {
@@ -37,11 +38,13 @@ export class TopupService {
     }
   }
 
-  async getUserTopupHistory(): Promise<ResponseDto<any>> {
+  async getUserTopupHistory(query: GetTopupRequestDto): Promise<ResponseDto<any>> {
     try {
+      const { pageSize, pageIndex } = query;
+
       const authInfo = this.commonUtil.getAuthInfo();
 
-      const data = await this.topUpRepo.getUserTopupHistory(authInfo.id);
+      const data = await this.topUpRepo.getUserTopupHistory(authInfo.id, pageSize, pageIndex);
 
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
