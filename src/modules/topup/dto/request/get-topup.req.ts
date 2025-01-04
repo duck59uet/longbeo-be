@@ -8,12 +8,12 @@ export class GetTopupRequestDto {
   @ApiProperty({
     example: 10,
   })
-  pageSize: number;
+  pageSize: number = 10;
 
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({
     example: 1,
   })
-  pageIndex: number;
+  pageIndex: number = 1;
 }

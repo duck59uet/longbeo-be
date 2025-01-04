@@ -1,4 +1,4 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { TopupService } from './topup.service';
@@ -43,6 +43,6 @@ export class TopupController {
   })
   @Roles(UserRole.USER)
   async getUserTopupHistory(@Query() query: GetTopupRequestDto): Promise<ResponseDto<any>> {
-    return this.topupService.getUserTopupHistory();
+    return this.topupService.getUserTopupHistory(query);
   }
 }
