@@ -24,7 +24,7 @@ export class AuthService {
 
     const user = await this.userRepo.getUser(username);
 
-    const data = { username: user.username, email: user.email };
+    const data = { name: user.username, email: user.email };
 
     const token = await this.jwtService.signAsync({
       id: user.id,
