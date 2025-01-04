@@ -1,13 +1,8 @@
 import { Body, Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  CONTROLLER_CONSTANTS,
-} from '../../common/constants/api.constant';
+import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { TopupService } from './topup.service';
-import {
-  CommonAuthPost,
-  Roles,
-} from '../../decorators/common.decorator';
+import { CommonAuthGet, CommonAuthPost, Roles } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateTopupDto } from './dto/request/topup.dto';
 import { UserRole } from '../user/entities/user.entity';
@@ -33,5 +28,20 @@ export class TopupController {
     @Body() createOrderDto: CreateTopupDto,
   ): Promise<ResponseDto<any>> {
     return this.topupService.createTopup(createOrderDto);
+  }
+
+  @CommonAuthGet({
+    url: 'user/topup',
+    summary: 'user get topup history',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'user get topup history',
+      schema: {},
+    },
+  })
+  @Roles(UserRole.USER)
+  async getUserTopupHistory(): Promise<ResponseDto<any>> {
+    return this.topupService.getUserTopupHistory();
   }
 }

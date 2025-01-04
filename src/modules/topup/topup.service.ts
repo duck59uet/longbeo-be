@@ -36,4 +36,16 @@ export class TopupService {
       return ResponseDto.responseError(TopupService.name, error);
     }
   }
+
+  async getUserTopupHistory(): Promise<ResponseDto<any>> {
+    try {
+      const authInfo = this.commonUtil.getAuthInfo();
+
+      const data = await this.topUpRepo.getUserTopupHistory(authInfo.id);
+
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(TopupService.name, error);
+    }
+  }
 }

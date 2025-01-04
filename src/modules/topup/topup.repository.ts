@@ -30,4 +30,12 @@ export class TopupRepository {
 
     return await this.repo.save(topup);
   }
+
+  async getUserTopupHistory(userId: string): Promise<Topup[]> {
+    return this.repo.find({
+      where: {
+        user_id: userId,
+      },
+    });
+  }
 }
