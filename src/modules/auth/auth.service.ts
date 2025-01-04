@@ -11,7 +11,7 @@ export class AuthService {
     private userRepo: UserRepository,
   ) {}
 
-  async userLogIn(loginDTO: LoginDTO): Promise<{ token: string; user: any }> {
+  async userLogIn(loginDTO: LoginDTO): Promise<string> {
     let { username, password } = loginDTO;
 
     // addr = standardizeAddress(addr);
@@ -24,15 +24,11 @@ export class AuthService {
 
     const user = await this.userRepo.getUser(username);
 
-    const data = { name: user.username, email: user.email };
-
-    const token = await this.jwtService.signAsync({
+    return await this.jwtService.signAsync({
       id: user.id,
       role: user.role,
       username: user.username
     });
-
-    return { token: token, user: data };
   }
 
   /**
