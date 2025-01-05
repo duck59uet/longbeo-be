@@ -8,6 +8,12 @@ export class Order extends BaseEntityAutoId {
   user_id: string;
 
   @Column({ nullable: false })
+  link: string;
+
+  @Column({ nullable: false })
+  quantity: number;
+
+  @Column({ nullable: false })
   amount: number;
 
   @Column({ nullable: false })

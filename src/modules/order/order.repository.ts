@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { CreateOrderDto } from './dto/request/create-order.dto';
 import { Service } from '../service/entities/service.entity';
+import { OrderStatus } from '../../common/constants/app.constant';
 
 @Injectable()
 export class OrderRepository {
@@ -20,13 +21,17 @@ export class OrderRepository {
 
   async createOrder(
     createOrderDto: CreateOrderDto,
+    price: number,
     userId: string,
   ): Promise<Order> {
     const order = new Order();
     order.user_id = userId;
+    order.link = createOrderDto.link;
+    order.quantity = createOrderDto.quantity;
     order.amount = createOrderDto.amount;
-    order.price = createOrderDto.price;
+    order.price = price;
     order.service_id = createOrderDto.service_id;
+    order.status = OrderStatus.COMPLETE;
     return await this.repo.save(order);
   }
 
@@ -35,6 +40,16 @@ export class OrderRepository {
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
+      .select([
+        'order.id as orderId',
+        'order.quantity as orderQuantity',
+        'order.amount as orderAmount',
+        'order.price as orderPrice',
+        'order.createdAt as orderCreatedAt',
+        'order.link as orderLink',
+        'order.note as orderNote',
+        'service.name',
+      ])
       .getMany();
   }
 }
