@@ -36,7 +36,7 @@ export class OrderRepository {
   }
 
   async getUserOrder(userId: string) {
-    const order = this.repo
+    const result = await this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
@@ -50,6 +50,8 @@ export class OrderRepository {
         'order.note as orderNote',
         'service.name',
       ])
-      .getMany();
+      .execute();
+
+    return result;
   }
 }
