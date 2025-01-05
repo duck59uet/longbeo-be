@@ -51,4 +51,13 @@ export class TopupRepository {
 
     return [itemCount, data];
   }
+
+  async getTopupById(id: string): Promise<number> {
+    const result = await this.repo
+      .createQueryBuilder('topup')
+      .where('topup.user_id = :id', { id })
+      .select('SUM(topup.amount)', 'total')
+      .execute();
+    return result[0].total;
+  }
 }

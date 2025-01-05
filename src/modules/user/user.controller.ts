@@ -86,4 +86,19 @@ export class UserController {
     this.logger.log('========== Change password ==========');
     return this.userService.changePassword(body);
   }
+
+  @CommonAuthGet({
+    url: '/balance',
+    summary: 'Get user balance',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Get user balance',
+      schema: {},
+    },
+  })
+  async getUserBalance() {
+    this.logger.log('========== Get user balance ==========');
+    return this.userService.getUserBalance();
+  }
 }

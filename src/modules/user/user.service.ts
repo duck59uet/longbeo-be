@@ -8,13 +8,21 @@ import { CreateUserDto } from './dto/request/create-user.req';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
+import { TopupRepository } from '../topup/topup.repository';
+import { OrderRepository } from '../order/order.repository';
+import { BalanceRepository } from '../balance/balance.repository';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
   private readonly commonUtil: CommonUtil = new CommonUtil();
 
-  constructor(private userRepo: UserRepository) {
+  constructor(
+    private userRepo: UserRepository,
+    private topupRepo: TopupRepository,
+    private orderRepo: OrderRepository,
+    private balanceRepo: BalanceRepository,
+  ) {
     this.logger.log('============== Constructor User Service ==============');
   }
 
@@ -31,7 +39,9 @@ export class UserService {
   async createUser(request: CreateUserDto): Promise<ResponseDto<any>> {
     try {
       const { username, fullname, email, password } = request;
-      const userExist = await this.userRepo.repo.findOne({ where: { username } });
+      const userExist = await this.userRepo.repo.findOne({
+        where: { username },
+      });
       if (userExist) {
         return ResponseDto.responseError(UserService.name, ErrorMap.USER_EXIST);
       }
@@ -113,6 +123,26 @@ export class UserService {
 
       const { password, ...result } = data;
       return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async getUserBalance(): Promise<ResponseDto<any>> {
+    try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      
+      const balance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });
+      const topup = await this.topupRepo.getTopupById(authInfo.id);
+      const order = await this.orderRepo.getOrderById(authInfo.id);
+
+      const data = {
+        balance: balance.balance,
+        topup: Number(topup),
+        order: Number(order),
+      }
+
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }

@@ -55,4 +55,14 @@ export class OrderRepository {
 
     return result;
   }
+
+  async getOrderById(userId: string): Promise<number> {
+    const result = await this.repo
+      .createQueryBuilder('order')
+      .where('order.user_id = :id', { id: userId })
+      .select('SUM(order.amount)', 'total')
+      .execute();
+
+    return result[0].total;
+  }
 }
