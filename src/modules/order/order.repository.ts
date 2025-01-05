@@ -41,14 +41,15 @@ export class OrderRepository {
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
       .select([
-        'order.id as orderId',
-        'order.quantity as orderQuantity',
-        'order.amount as orderAmount',
-        'order.price as orderPrice',
-        'order.createdAt as orderCreatedAt',
-        'order.link as orderLink',
-        'order.note as orderNote',
-        'service.name',
+        'order.id as "orderId"',
+        'order.quantity as "orderQuantity"',
+        'order.amount as "orderAmount"',
+        'order.price as "orderPrice"',
+        'order.createdAt as "createdAt"',
+        'order.link as "orderLink"',
+        'order.note as "orderNote"',
+        'service.name as "serviceName"',
+        'service.price as "servicePrice"',
       ])
       .execute();
 
