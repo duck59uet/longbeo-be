@@ -34,11 +34,11 @@ export class UserRepository {
     });
   }
 
-  async getUser(username: string): Promise<User> {
+  async getUser(id: string): Promise<User> {
     const qb = this.repo
       .createQueryBuilder('users')
       .where({
-        username,
+        id,
         deletedAt: IsNull(),
       })
 

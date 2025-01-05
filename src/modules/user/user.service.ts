@@ -21,8 +21,7 @@ export class UserService {
   async getUserInfo(): Promise<ResponseDto<User>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      const username = authInfo.username;
-      const user = await this.userRepo.getUser(username);
+      const user = await this.userRepo.getUser(authInfo.id);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
@@ -32,7 +31,7 @@ export class UserService {
   async createUser(request: CreateUserDto): Promise<ResponseDto<any>> {
     try {
       const { username, fullname, email, password } = request;
-      const userExist = await this.userRepo.getUser(username);
+      const userExist = await this.userRepo.repo.findOne({ where: { username } });
       if (userExist) {
         return ResponseDto.responseError(UserService.name, ErrorMap.USER_EXIST);
       }
