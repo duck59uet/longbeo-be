@@ -24,3 +24,8 @@ export enum TopupStatus {
   COMPLETE = 'Complete',
   DELETE = 'Delete',
 }
+
+export enum ServiceStatus {
+  ACTIVE = 1,
+  INACTIVE = 2,
+}

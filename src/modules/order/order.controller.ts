@@ -5,6 +5,7 @@ import {
 } from '../../common/constants/api.constant';
 import { OrderService } from './order.service';
 import {
+  CommonAuthGet,
   CommonAuthPost,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
@@ -18,8 +19,8 @@ export class OrderController {
 
   constructor(private orderService: OrderService) {}
   @CommonAuthPost({
-    url: 'order',
-    summary: 'user create order while buy/sell zcoin',
+    url: 'user/create',
+    summary: 'create order',
     apiOkResponseOptions: {
       status: 200,
       type: ResponseDto,
@@ -33,18 +34,18 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDto);
   }
 
-  @CommonAuthPost({
-    url: 'update',
-    summary: 'admin update order',
+  @CommonAuthGet({
+    url: 'user/history',
+    summary: 'get user order',
     apiOkResponseOptions: {
       status: 200,
       type: ResponseDto,
-      description: 'admin update order',
+      description: 'get user order',
       schema: {},
     },
   })
-  async updateOrder(@Body() body: UpdateOrderDto) {
-    this.logger.log('========== Edit user info ==========');
-    return this.orderService.updateOrder(body);
+  async getUserOrder() {
+    this.logger.log('========== Get user order ==========');
+    return this.orderService.getUserOrder();
   }
 }

@@ -14,8 +14,11 @@ export class Order extends BaseEntityAutoId {
   price: number;
 
   @Column({ nullable: false })
-  service_id: string;
+  service_id: number;
 
   @Column({ nullable: false })
   status: OrderStatus;
+
+  @Column({ nullable: true })
+  note: string;
 }

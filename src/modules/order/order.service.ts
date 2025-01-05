@@ -34,23 +34,12 @@ export class OrderService {
     }
   }
 
-  async updateOrder(updateOrderDto: UpdateOrderDto): Promise<ResponseDto<any>> {
+  async getUserOrder(): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      if (authInfo.role !== UserRole.ADMIN) {
-        console.log(authInfo.role);
-        return ResponseDto.responseError(
-          OrderService.name,
-          ErrorMap.UN_AUTHORIZED,
-        );
-      }
-      let order = await this.orderRepo.repo.findOneBy({
-        id: updateOrderDto.id,
-      });
-      order.status = updateOrderDto.status;
+      const data = await this.orderRepo.getUserOrder(authInfo.id);
 
-      const updateOrder = await this.orderRepo.repo.save(order);
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, updateOrder);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
     }
