@@ -7,6 +7,7 @@ import { CreateOrderDto } from './dto/request/create-order.dto';
 import { UserRepository } from '../user/user.repository';
 import { ServiceRepository } from '../service/service.repository';
 import { BalanceRepository } from '../balance/balance.repository';
+import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -52,6 +53,15 @@ export class OrderService {
       const authInfo = this.commonUtil.getAuthInfo();
       const data = await this.orderRepo.getUserOrder(authInfo.id);
 
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(OrderService.name, error);
+    }
+  }
+
+  async adminGetOrder(query: AdminGetOrderRequestDto): Promise<ResponseDto<any>> {
+    try {
+      const data = await this.orderRepo.adminGetOrder(query);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
