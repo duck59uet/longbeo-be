@@ -64,6 +64,6 @@ export class OrderController {
   @Roles(UserRole.ADMIN)
   async adminGetOrder(@Query() query: AdminGetOrderRequestDto) {
     this.logger.log('========== Admin get order ==========');
-    return this.orderService.adminGetOrder();
+    return this.orderService.adminGetOrder(query);
   }
 }

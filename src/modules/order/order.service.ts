@@ -37,6 +37,8 @@ export class OrderService {
         return ResponseDto.responseError(OrderService.name, ErrorMap.BALANCE_NOT_ENOUGH);
       }
 
+      await this.balanceRepo.repo.update({ user_id: authInfo.id }, { balance: userBalance.balance - price });
+
       const data = await this.orderRepo.createOrder(
         createOrderDto,
         price,
