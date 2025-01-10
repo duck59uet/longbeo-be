@@ -50,6 +50,7 @@ export class UserRepository {
     fullname: string,
     email: string,
     password: string,
+    phone: string,
   ): Promise<User> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -58,6 +59,7 @@ export class UserRepository {
     user.fullname = fullname;
     user.role = UserRole.USER;
     user.email = email;
+    user.phone = phone;
     user.password = hashedPassword;
     return await this.repo.save(user);
   }

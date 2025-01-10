@@ -28,13 +28,13 @@ export class UserService {
 
   async createUser(request: CreateUserDto): Promise<ResponseDto<User>> {
     try {
-      const { username, fullname, email, password } = request;
+      const { username, fullname, email, password, phone } = request;
       const userExist = await this.userRepo.getUser(username);
       if (userExist) {
         return ResponseDto.responseError(UserService.name, ErrorMap.USER_EXIST);
       }
 
-      const user = await this.userRepo.createUser(username, fullname, email, password);
+      const user = await this.userRepo.createUser(username, fullname, email, password, phone);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);

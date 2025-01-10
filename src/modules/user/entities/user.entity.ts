@@ -23,6 +23,9 @@ export class User extends BaseEntityAutoId {
   email: string;
 
   @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
   facebook: string;
 
   @Column({ nullable: true })
