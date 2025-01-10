@@ -39,13 +39,111 @@ export class UserService {
   async createUser(request: CreateUserDto): Promise<ResponseDto<any>> {
     try {
       const { username, fullname, email, password, phone } = request;
-      const userExist = await this.userRepo.getUser(username);
+      const userExist = await this.userRepo.repo.findOne({
+        where: { username },
+      });
       if (userExist) {
         return ResponseDto.responseError(UserService.name, ErrorMap.USER_EXIST);
       }
 
-      const user = await this.userRepo.createUser(username, fullname, email, password, phone);
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
+      const user = await this.userRepo.createUser(
+        username,
+        fullname,
+        email,
+        password,
+        phone
+      );
+
+      const { password: userPassword, ...result } = user;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async updateUser(body: UpdateUserDto): Promise<ResponseDto<any>> {
+    try {
+      const userId = this.commonUtil.getAuthInfo().id;
+
+      const user = await this.userRepo.repo.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      const { fullname, avatar, facebook } = body;
+
+      user.fullname = fullname;
+      user.avatar = avatar;
+      user.facebook = facebook;
+
+      const data = await this.userRepo.repo.save(user);
+
+      const { password, ...result } = data;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async changePassword(body: ChangePasswordDto): Promise<ResponseDto<any>> {
+    try {
+      const userId = this.commonUtil.getAuthInfo().id;
+
+      const user = await this.userRepo.repo.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      const { oldPassword, newPassword } = body;
+
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.WRONG_PASSWORD,
+        );
+      }
+
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+      user.password = hashedPassword;
+
+      const data = await this.userRepo.repo.save(user);
+
+      const { password, ...result } = data;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async getUserBalance(): Promise<ResponseDto<any>> {
+    try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      
+      const balance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });
+      const topup = await this.topupRepo.getTopupById(authInfo.id);
+      const order = await this.orderRepo.getOrderById(authInfo.id);
+
+      const data = {
+        balance: balance.balance,
+        topup: Number(topup),
+        order: Number(order),
+      }
+
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }
