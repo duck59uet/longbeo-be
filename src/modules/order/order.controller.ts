@@ -1,15 +1,18 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
 } from '../../common/constants/api.constant';
 import { OrderService } from './order.service';
 import {
+  CommonAuthGet,
   CommonAuthPost,
+  Roles,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateOrderDto } from './dto/request/create-order.dto';
-import { UpdateOrderDto } from './dto/request/update-order.dto';
+import { UserRole } from '../user/entities/user.entity';
+import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 
 @Controller(CONTROLLER_CONSTANTS.ORDER)
 @ApiTags(CONTROLLER_CONSTANTS.ORDER)
@@ -18,8 +21,8 @@ export class OrderController {
 
   constructor(private orderService: OrderService) {}
   @CommonAuthPost({
-    url: 'order',
-    summary: 'user create order while buy/sell zcoin',
+    url: 'user/create',
+    summary: 'create order',
     apiOkResponseOptions: {
       status: 200,
       type: ResponseDto,
@@ -33,18 +36,34 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDto);
   }
 
-  @CommonAuthPost({
-    url: 'update',
-    summary: 'admin update order',
+  @CommonAuthGet({
+    url: 'user/history',
+    summary: 'get user order',
     apiOkResponseOptions: {
       status: 200,
       type: ResponseDto,
-      description: 'admin update order',
+      description: 'get user order',
       schema: {},
     },
   })
-  async updateOrder(@Body() body: UpdateOrderDto) {
-    this.logger.log('========== Edit user info ==========');
-    return this.orderService.updateOrder(body);
+  async getUserOrder() {
+    this.logger.log('========== Get user order ==========');
+    return this.orderService.getUserOrder();
+  }
+
+  @CommonAuthGet({
+    url: 'admin/get',
+    summary: 'admin get order',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin get order',
+      schema: {},
+    },
+  })
+  @Roles(UserRole.ADMIN)
+  async adminGetOrder(@Query() query: AdminGetOrderRequestDto) {
+    this.logger.log('========== Admin get order ==========');
+    return this.orderService.adminGetOrder(query);
   }
 }

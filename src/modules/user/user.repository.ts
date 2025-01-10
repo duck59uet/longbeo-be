@@ -12,7 +12,7 @@ export class UserRepository {
 
   constructor(
     @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    public repo: Repository<User>,
     private configService: ConfigService
   ) {
     this.logger.log(
@@ -34,11 +34,11 @@ export class UserRepository {
     });
   }
 
-  async getUser(username: string): Promise<User> {
+  async getUser(id: string): Promise<User> {
     const qb = this.repo
       .createQueryBuilder('users')
       .where({
-        username,
+        id,
         deletedAt: IsNull(),
       })
 

@@ -4,9 +4,10 @@ import { ErrorMap } from '../../common/error.map';
 import { OrderRepository } from './order.repository';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateOrderDto } from './dto/request/create-order.dto';
-import { UserRole } from '../user/entities/user.entity';
 import { UserRepository } from '../user/user.repository';
-import { UpdateOrderDto } from './dto/request/update-order.dto';
+import { ServiceRepository } from '../service/service.repository';
+import { BalanceRepository } from '../balance/balance.repository';
+import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -15,6 +16,8 @@ export class OrderService {
 
   constructor(
     private orderRepo: OrderRepository,
+    private serviceRepo: ServiceRepository,
+    private balanceRepo: BalanceRepository,
     private userRepo: UserRepository,
   ) {
     this.logger.log('============== Constructor Order Service ==============');
@@ -22,10 +25,23 @@ export class OrderService {
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<ResponseDto<any>> {
     try {
+      const { quantity, amount, service_id } = createOrderDto;
+
       const authInfo = this.commonUtil.getAuthInfo();
+      const userBalance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });
+
+      const server = await this.serviceRepo.repo.findOne({ where: { id: service_id } });
+      const price = Number(server.price) * Number(quantity) * Number(amount);
+
+      if (userBalance.balance < price) {
+        return ResponseDto.responseError(OrderService.name, ErrorMap.BALANCE_NOT_ENOUGH);
+      }
+
+      await this.balanceRepo.repo.update({ user_id: authInfo.id }, { balance: userBalance.balance - price });
 
       const data = await this.orderRepo.createOrder(
         createOrderDto,
+        price,
         authInfo.id,
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
@@ -34,23 +50,21 @@ export class OrderService {
     }
   }
 
-  async updateOrder(updateOrderDto: UpdateOrderDto): Promise<ResponseDto<any>> {
+  async getUserOrder(): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      if (authInfo.role !== UserRole.ADMIN) {
-        console.log(authInfo.role);
-        return ResponseDto.responseError(
-          OrderService.name,
-          ErrorMap.UN_AUTHORIZED,
-        );
-      }
-      let order = await this.orderRepo.repo.findOneBy({
-        id: updateOrderDto.id,
-      });
-      order.status = updateOrderDto.status;
+      const data = await this.orderRepo.getUserOrder(authInfo.id);
 
-      const updateOrder = await this.orderRepo.repo.save(order);
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, updateOrder);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(OrderService.name, error);
+    }
+  }
+
+  async adminGetOrder(query: AdminGetOrderRequestDto): Promise<ResponseDto<any>> {
+    try {
+      const data = await this.orderRepo.adminGetOrder(query);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
     }

@@ -3,6 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { CreateOrderDto } from './dto/request/create-order.dto';
+import { Service } from '../service/entities/service.entity';
+import { OrderStatus } from '../../common/constants/app.constant';
+import { User } from '../user/entities/user.entity';
+import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 
 @Injectable()
 export class OrderRepository {
@@ -17,12 +21,79 @@ export class OrderRepository {
     );
   }
 
-  async createOrder(createOrderDto: CreateOrderDto, userId: string): Promise<Order> {
+  async createOrder(
+    createOrderDto: CreateOrderDto,
+    price: number,
+    userId: string,
+  ): Promise<Order> {
     const order = new Order();
     order.user_id = userId;
+    order.link = createOrderDto.link;
+    order.quantity = createOrderDto.quantity;
     order.amount = createOrderDto.amount;
-    order.price = createOrderDto.price;
+    order.price = price;
     order.service_id = createOrderDto.service_id;
+    order.status = OrderStatus.COMPLETE;
     return await this.repo.save(order);
+  }
+
+  async getUserOrder(userId: string) {
+    const result = await this.repo
+      .createQueryBuilder('order')
+      .innerJoin(Service, 'service', 'service.id = order.service_id')
+      .where('order.user_id = :userId', { userId })
+      .select([
+        'order.id as "orderId"',
+        'order.quantity as "orderQuantity"',
+        'order.amount as "orderAmount"',
+        'order.price as "orderPrice"',
+        'order.createdAt as "createdAt"',
+        'order.link as "orderLink"',
+        'order.note as "orderNote"',
+        'service.name as "serviceName"',
+        'service.price as "servicePrice"',
+      ])
+      .execute();
+
+    return result;
+  }
+
+  async getOrderById(userId: string): Promise<number> {
+    const result = await this.repo
+      .createQueryBuilder('order')
+      .where('order.user_id = :id', { id: userId })
+      .select('SUM(order.amount)', 'total')
+      .execute();
+
+    return result[0].total;
+  }
+
+  async adminGetOrder(query: AdminGetOrderRequestDto) {
+    const { page, limit } = query;
+    const sql = await this.repo
+      .createQueryBuilder('order')
+      .innerJoin(Service, 'service', 'service.id = order.service_id')
+      .innerJoin(User, 'user', 'user.id = order.user_id')
+      .select([
+        'order.id as "orderId"',
+        'order.quantity as "orderQuantity"',
+        'order.amount as "orderAmount"',
+        'order.price as "orderPrice"',
+        'order.createdAt as "createdAt"',
+        'order.link as "orderLink"',
+        'order.note as "orderNote"',
+        'user.id as "userId"',
+        'user.username as "username"',
+        'user.fullname as "fullname"',
+        'service.name as "serviceName"',
+        'service.price as "servicePrice"',
+      ]);
+
+    const [count, item] = await Promise.all([
+      sql.getCount(),
+      sql.limit(limit).offset((page - 1) * limit).execute(),
+    ]);
+
+    return [count, item];
   }
 }

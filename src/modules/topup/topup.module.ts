@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { OrderController } from './topup.controller';
-import { OrderService } from './topup.service';
+import { TopupController } from './topup.controller';
+import { TopupService } from './topup.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Order } from './entities/topup.entity';
-import { OrderRepository } from './topup.repository';
-import { UserModule } from '../user/user.module';
+import { Topup } from './entities/topup.entity';
+import { TopupRepository } from './topup.repository';
+import { BalanceModule } from '../balance/balance.module';
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forFeature([Order])],
-  controllers: [OrderController],
-  providers: [OrderService, OrderRepository],
-  exports: [OrderRepository]
+  imports: [BalanceModule, TypeOrmModule.forFeature([Topup])],
+  controllers: [TopupController],
+  providers: [TopupService, TopupRepository],
+  exports: [TopupRepository]
 })
-export class OrderModule {}
+export class TopupModule {}

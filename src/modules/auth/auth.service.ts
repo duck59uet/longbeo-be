@@ -22,7 +22,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid username or password');
     }
 
-    const user = await this.userRepo.getUser(username);
+    const user = await this.userRepo.repo.findOne({ where: { username } });
 
     return await this.jwtService.signAsync({
       id: user.id,

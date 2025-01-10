@@ -1,17 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
-import { OrderType } from '../../../../common/constants/app.constant';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class CreateOrderDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  link: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  quantity: number;
+
   @ApiProperty()
   @IsNotEmpty()
   amount: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  price: number;
+  service_id: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  service_id: string;
+  @IsOptional()
+  @IsString()
+  note: string;
 }
