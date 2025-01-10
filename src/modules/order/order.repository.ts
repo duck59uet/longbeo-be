@@ -62,7 +62,7 @@ export class OrderRepository {
     const result = await this.repo
       .createQueryBuilder('order')
       .where('order.user_id = :id', { id: userId })
-      .select('SUM(order.amount)', 'total')
+      .select('SUM(order.price)', 'total')
       .execute();
 
     return result[0].total;
@@ -70,7 +70,7 @@ export class OrderRepository {
 
   async adminGetOrder(query: AdminGetOrderRequestDto) {
     const { page, limit } = query;
-    const sql = await this.repo
+    const sql = this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .innerJoin(User, 'user', 'user.id = order.user_id')

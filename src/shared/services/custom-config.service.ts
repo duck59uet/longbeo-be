@@ -28,7 +28,7 @@ export class CustomConfigService {
       database: this.configService.get<string>('DB_DATABASE'),
       migrationsRun: true,
       synchronize: false,
-      logging: ['error'],
+      logging: true,
       namingStrategy: new PascalCaseStrategy(),
       autoLoadEntities: true,
       poolSize: 500,

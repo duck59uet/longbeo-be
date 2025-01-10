@@ -1,4 +1,4 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { ServiceService } from './service.service';
@@ -16,7 +16,7 @@ export class BalanceController {
   constructor(private serviceService: ServiceService) {}
 
   @CommonGet({
-    url: '',
+    url: ':categoryId',
     summary: 'Get all services',
     apiOkResponseOptions: {
       status: 200,
@@ -25,7 +25,7 @@ export class BalanceController {
       schema: {},
     },
   })
-  async getService(): Promise<ResponseDto<any>> {
-    return this.serviceService.getService();
+  async getService(@Param('categoryId') categoryId: number): Promise<ResponseDto<any>> {
+    return this.serviceService.getService(categoryId);
   }
 }
