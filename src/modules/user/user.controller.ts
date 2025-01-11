@@ -13,7 +13,6 @@ import { ResponseDto } from '../../common/dtos';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.req';
 import { UpdateUserDto } from './dto/request/update-user.req';
-import { GetUserPathParamDto } from './dto/request/get-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
 
 @Controller(CONTROLLER_CONSTANTS.USER)

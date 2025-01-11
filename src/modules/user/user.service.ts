@@ -38,7 +38,7 @@ export class UserService {
 
   async createUser(request: CreateUserDto): Promise<ResponseDto<any>> {
     try {
-      const { username, fullname, email, password } = request;
+      const { username, fullname, email, password, phone } = request;
       const userExist = await this.userRepo.repo.findOne({
         where: { username },
       });
@@ -51,6 +51,7 @@ export class UserService {
         fullname,
         email,
         password,
+        phone
       );
 
       const { password: userPassword, ...result } = user;

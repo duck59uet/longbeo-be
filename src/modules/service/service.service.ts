@@ -3,7 +3,6 @@ import { ResponseDto } from '../../common/dtos';
 import { ErrorMap } from '../../common/error.map';
 import { ServiceRepository } from './service.repository';
 import { CommonUtil } from '../../utils/common.util';
-import { UserRepository } from '../user/user.repository';
 import { ServiceStatus } from '../../common/constants/app.constant';
 
 @Injectable()
@@ -17,9 +16,9 @@ export class ServiceService {
     this.logger.log('============== Constructor Order Service ==============');
   }
 
-  async getService(): Promise<ResponseDto<any>> {
+  async getService(categoryId: number): Promise<ResponseDto<any>> {
     try {
-      const data = await this.serviceRepo.repo.find({where: {status: ServiceStatus.ACTIVE}});
+      const data = await this.serviceRepo.repo.find({ where: { status: ServiceStatus.ACTIVE, categoryId }, order: { name: 'ASC' } });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(ServiceRepository.name, error);
