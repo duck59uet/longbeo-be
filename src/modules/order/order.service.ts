@@ -50,10 +50,10 @@ export class OrderService {
     }
   }
 
-  async getUserOrder(): Promise<ResponseDto<any>> {
+  async getUserOrder(id: string): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      const data = await this.orderRepo.getUserOrder(authInfo.id);
+      const data = await this.orderRepo.getUserOrder(authInfo.id, id);
 
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {

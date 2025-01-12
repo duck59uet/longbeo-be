@@ -37,11 +37,14 @@ export class OrderRepository {
     return await this.repo.save(order);
   }
 
-  async getUserOrder(userId: string) {
+  async getUserOrder(userId: string, id: string) {
+    const serviceIds = id.split(',').map((item) => Number(item));
+
     const result = await this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
+      .andWhere('order.service_id IN (:...serviceIds)', { serviceIds })
       .select([
         'order.id as "orderId"',
         'order.quantity as "orderQuantity"',

@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Query } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -37,7 +37,7 @@ export class OrderController {
   }
 
   @CommonAuthGet({
-    url: 'user/history',
+    url: 'user/history/:id',
     summary: 'get user order',
     apiOkResponseOptions: {
       status: 200,
@@ -46,9 +46,9 @@ export class OrderController {
       schema: {},
     },
   })
-  async getUserOrder() {
+  async getUserOrder(@Param('id') id: string) {
     this.logger.log('========== Get user order ==========');
-    return this.orderService.getUserOrder();
+    return this.orderService.getUserOrder(id);
   }
 
   @CommonAuthGet({
