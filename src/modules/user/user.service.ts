@@ -11,6 +11,7 @@ import { ChangePasswordDto } from './dto/request/change-password';
 import { TopupRepository } from '../topup/topup.repository';
 import { OrderRepository } from '../order/order.repository';
 import { BalanceRepository } from '../balance/balance.repository';
+import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 
 @Injectable()
 export class UserService {
@@ -143,6 +144,15 @@ export class UserService {
         order: Number(order),
       }
 
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async adminGetUsers(req: AdminGetUsersRequestDto): Promise<ResponseDto<any>> {
+    try {
+      const data = await this.userRepo.adminGetUsers(req);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);

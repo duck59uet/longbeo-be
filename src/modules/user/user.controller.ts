@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Param } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -8,12 +8,15 @@ import {
   CommonAuthGet,
   CommonAuthPost,
   CommonPost,
+  Roles,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.req';
 import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
+import { UserRole } from './entities/user.entity';
+import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -100,4 +103,20 @@ export class UserController {
     this.logger.log('========== Get user balance ==========');
     return this.userService.getUserBalance();
   }
+
+  @CommonAuthGet({
+      url: 'admin/getUsers',
+      summary: 'admin get users',
+      apiOkResponseOptions: {
+        status: 200,
+        type: ResponseDto,
+        description: 'admin get order',
+        schema: {},
+      },
+    })
+    @Roles(UserRole.ADMIN)
+    async adminGetUser(@Query() query: AdminGetUsersRequestDto) {
+      this.logger.log('========== Admin get users ==========');
+      return this.userService.adminGetUsers(query);
+    }
 }

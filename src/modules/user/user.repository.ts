@@ -4,6 +4,8 @@ import { IsNull, Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
+import { Balance } from '../balance/entities/balance.entity';
 
 @Injectable()
 export class UserRepository {
@@ -78,5 +80,28 @@ export class UserRepository {
       return false;
     }
     return await bcrypt.compare(password, user.password);
+  }
+
+  async adminGetUsers(req: AdminGetUsersRequestDto) {
+    const { page, limit } = req;
+    const sql = this.repo
+      .createQueryBuilder('user')
+      .leftJoin(Balance, 'balance', 'balance.user_id = user.id')
+      .select([
+        'user.id as "userId"',
+        'user.username as "username"',
+        'user.fullname as "fullname"',
+        'user.email as "email"',
+        'user.phone as "phone"',
+        'user.role as "role"',
+        'balance.balance as "balance"',
+      ]);
+
+    const [count, item] = await Promise.all([
+      sql.getCount(),
+      sql.skip(limit * (page - 1)).take(limit).getMany(),
+    ]);
+
+    return [count, item];
   }
 }
