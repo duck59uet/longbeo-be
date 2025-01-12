@@ -65,7 +65,15 @@ export class UserRepository {
   }
 
   async verifyUser(userName: string, password: string): Promise<boolean> {
-    const user = await this.repo.findOne({where: {username: userName}});
+    const user = await this.repo.findOne({where: {username: userName, role: UserRole.USER}});
+    if (!user) {
+      return false;
+    }
+    return await bcrypt.compare(password, user.password);
+  }
+
+  async verifyAdmin(userName: string, password: string): Promise<boolean> {
+    const user = await this.repo.findOne({where: {username: userName, role: UserRole.ADMIN}});
     if (!user) {
       return false;
     }

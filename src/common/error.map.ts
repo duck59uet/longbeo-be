@@ -39,6 +39,10 @@ export const ErrorMap = {
     Code: 'E004',
     Message: 'Balance not enough',
   },
+  SERVICE_NOT_FOUND: {
+    Code: 'E005',
+    Message: 'Service not found',
+  },
   E500: {
     Code: 'E500',
     Message: 'Server error',

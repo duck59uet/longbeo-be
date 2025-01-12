@@ -23,7 +23,17 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDTO: LoginDTO): Promise<{ token: string }> {
-    const token = await this.authService.userLogIn(loginDTO);
+    const token = await this.authService.userLogin(loginDTO);
+    return { token };
+  }
+
+  @Post('admin/login')
+  @ApiOperation({
+    summary: 'Send signature to create access token',
+  })
+  @HttpCode(HttpStatus.OK)
+  async adminLogin(@Body() loginDTO: LoginDTO): Promise<{ token: string }> {
+    const token = await this.authService.adminLogin(loginDTO);
     return { token };
   }
 }

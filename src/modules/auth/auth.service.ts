@@ -11,10 +11,8 @@ export class AuthService {
     private userRepo: UserRepository,
   ) {}
 
-  async userLogIn(loginDTO: LoginDTO): Promise<string> {
+  async userLogin(loginDTO: LoginDTO): Promise<string> {
     let { username, password } = loginDTO;
-
-    // addr = standardizeAddress(addr);
 
     const verifyUser = await this.userRepo.verifyUser(username, password);
 
@@ -30,6 +28,26 @@ export class AuthService {
       username: user.username
     });
   }
+
+  async adminLogin(loginDTO: LoginDTO): Promise<string> {
+    let { username, password } = loginDTO;
+
+    const verifyUser = await this.userRepo.verifyAdmin(username, password);
+
+    if (!verifyUser) {
+      throw new UnauthorizedException('Invalid username or password');
+    }
+
+    const user = await this.userRepo.repo.findOne({ where: { username } });
+
+    return await this.jwtService.signAsync({
+      id: user.id,
+      role: user.role,
+      username: user.username
+    });
+  }
+
+
 
   /**
    * getAuthUser

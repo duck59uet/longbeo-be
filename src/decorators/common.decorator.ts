@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   SetMetadata,
   UseGuards,
   UseInterceptors,
@@ -32,6 +33,10 @@ export function CommonAuthPost(options: Options) {
   return applyDecorators(CommonPost(options), Auth());
 }
 
+export function CommonAuthPut(options: Options) {
+  return applyDecorators(CommonPut(options), Auth());
+}
+
 export function CommonAuthDelete(options: Options) {
   return applyDecorators(CommonDelete(options), Auth());
 }
@@ -44,6 +49,13 @@ export function CommonPost(options: Options) {
   return applyDecorators(
     Common(options.summary, options.description, options.apiOkResponseOptions),
     Post(options.url),
+  );
+}
+
+export function CommonPut(options: Options) {
+  return applyDecorators(
+    Common(options.summary, options.description, options.apiOkResponseOptions),
+    Put(options.url),
   );
 }
 
