@@ -46,15 +46,15 @@ export class OrderRepository {
       .where('order.user_id = :userId', { userId })
       .andWhere('order.service_id IN (:...serviceIds)', { serviceIds })
       .select([
-        'order.id as "orderId"',
-        'order.quantity as "orderQuantity"',
-        'order.amount as "orderAmount"',
-        'order.price as "orderPrice"',
-        'order.createdAt as "createdAt"',
-        'order.link as "orderLink"',
-        'order.note as "orderNote"',
-        'service.name as "serviceName"',
-        'service.price as "servicePrice"',
+        'order.id',
+        'order.quantity',
+        'order.amount',
+        'order.price',
+        'order.createdAt',
+        'order.link',
+        'order.note',
+        'service.name',
+        'service.price',
       ])
       .execute();
 
@@ -78,18 +78,18 @@ export class OrderRepository {
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .innerJoin(User, 'user', 'user.id = order.user_id')
       .select([
-        'order.id as "orderId"',
-        'order.quantity as "orderQuantity"',
-        'order.amount as "orderAmount"',
-        'order.price as "orderPrice"',
-        'order.createdAt as "createdAt"',
-        'order.link as "orderLink"',
-        'order.note as "orderNote"',
-        'user.id as "userId"',
-        'user.username as "username"',
-        'user.fullname as "fullname"',
-        'service.name as "serviceName"',
-        'service.price as "servicePrice"',
+        'order.id',
+        'order.quantity',
+        'order.amount',
+        'order.price',
+        'order.createdAt',
+        'order.link',
+        'order.note',
+        'user.id',
+        'user.username',
+        'user.fullname',
+        'service.name',
+        'service.price',
       ]);
 
     const [count, item] = await Promise.all([
