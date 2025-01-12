@@ -29,7 +29,7 @@ export class CustomConfigService {
       migrationsRun: true,
       synchronize: true,
       logging: true,
-      namingStrategy: new PascalCaseStrategy(),
+      // namingStrategy: new PascalCaseStrategy(),
       autoLoadEntities: true,
       poolSize: 500,
       extra: {

@@ -88,13 +88,13 @@ export class UserRepository {
       .createQueryBuilder('user')
       .leftJoin(Balance, 'balance', 'balance.user_id = user.id')
       .select([
-        'user.id as "userId"',
-        'user.username as "username"',
-        'user.fullname as "fullname"',
-        'user.email as "email"',
-        'user.phone as "phone"',
-        'user.role as "role"',
-        'balance.balance as "balance"',
+        'user.id',
+        'user.username',
+        'user.fullname',
+        'user.email',
+        'user.phone',
+        'user.role',
+        'balance.balance',
       ]);
 
     const [count, item] = await Promise.all([

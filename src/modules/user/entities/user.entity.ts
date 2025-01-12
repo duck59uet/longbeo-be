@@ -10,7 +10,7 @@ export class User extends BaseEntityAutoId {
   @Column({ nullable: false })
   username: string;
 
-  @Column({ nullable: false, name: 'FullName' })
+  @Column({ nullable: false })
   fullname: string;
 
   @Column({ nullable: true })
@@ -22,7 +22,7 @@ export class User extends BaseEntityAutoId {
   @Column({ nullable: false })
   email: string;
 
-  @Column({ nullable: true, name: 'Phone' })
+  @Column({ nullable: true})
   phone: string;
 
   @Column({ nullable: true })
