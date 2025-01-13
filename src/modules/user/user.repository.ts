@@ -87,6 +87,7 @@ export class UserRepository {
     const sql = this.repo
       .createQueryBuilder('user')
       .leftJoin(Balance, 'balance', 'balance.user_id = user.id')
+      .where('user.role = :role', { role: UserRole.USER })
       .select([
         'user.id',
         'user.username',
