@@ -29,7 +29,6 @@ export class TopupRepository {
     topup.payment_code = createOrderDto.payment_code;
     topup.sender = createOrderDto.sender;
     topup.content = createOrderDto.content;
-    topup.status = createOrderDto.status;
 
     return await this.repo.save(topup);
   }

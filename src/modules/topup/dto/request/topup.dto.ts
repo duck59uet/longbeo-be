@@ -28,8 +28,4 @@ export class CreateTopupDto {
   @ApiProperty()
   @IsOptional()
   content: string;
-
-  @ApiProperty()
-  @IsOptional()
-  status: TopupStatus;
 }
