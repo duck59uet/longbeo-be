@@ -25,6 +25,6 @@ export class Topup extends BaseEntityAutoId {
   @Column({ nullable: false })
   content: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   status: TopupStatus;
 }
