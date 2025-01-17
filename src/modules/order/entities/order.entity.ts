@@ -4,7 +4,7 @@ import { OrderStatus } from '../../../common/constants/app.constant';
 
 @Entity({ name: 'orders' })
 export class Order extends BaseEntityAutoId {
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'uuid' })
   user_id: string;
 
   @Column({ nullable: false })
@@ -19,7 +19,7 @@ export class Order extends BaseEntityAutoId {
   @Column({ nullable: false })
   price: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'uuid' })
   service_id: number;
 
   @Column({ nullable: false })
