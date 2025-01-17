@@ -19,7 +19,7 @@ export class Order extends BaseEntityAutoId {
   @Column({ nullable: false })
   price: number;
 
-  @Column({ nullable: false, type: 'uuid' })
+  @Column({ nullable: false })
   service_id: number;
 
   @Column({ nullable: false })
