@@ -86,6 +86,7 @@ export class OrderRepository {
         'order.price',
         'order.createdAt',
         'order.link',
+        'order.status',
         'order.note',
         'user.id',
         'user.username',
