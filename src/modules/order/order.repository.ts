@@ -78,7 +78,7 @@ export class OrderRepository {
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .innerJoin(User, 'user', 'user.id = order.user_id')
       .orderBy('order.createdAt', 'DESC')
-      .where('service.category_id = :categoryId', { categoryId })
+      .where('service.categoryId = :categoryId', { categoryId })
       .select([
         'order.id',
         'order.quantity',
