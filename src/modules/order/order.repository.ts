@@ -37,14 +37,14 @@ export class OrderRepository {
     return await this.repo.save(order);
   }
 
-  async getUserOrder(userId: string, id: string) {
-    const serviceIds = id.split(',').map((item) => Number(item));
+  async getUserOrder(userId: string, query: AdminGetOrderRequestDto) {
+    const { categoryId, page, limit } = query;
 
-    const result = await this.repo
+    const sql = this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
-      .andWhere('order.service_id IN (:...serviceIds)', { serviceIds })
+      .andWhere('service.categoryId = :categoryId', { categoryId })
       .select([
         'order.id',
         'order.quantity',
@@ -55,10 +55,17 @@ export class OrderRepository {
         'order.note',
         'service.name',
         'service.price',
-      ])
-      .execute();
+      ]);
 
-    return result;
+    const [count, item] = await Promise.all([
+      sql.getCount(),
+      sql
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .execute(),
+    ]);
+
+    return [count, item];
   }
 
   async getOrderById(userId: string): Promise<number> {
@@ -97,7 +104,10 @@ export class OrderRepository {
 
     const [count, item] = await Promise.all([
       sql.getCount(),
-      sql.limit(limit).offset((page - 1) * limit).execute(),
+      sql
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .execute(),
     ]);
 
     return [count, item];

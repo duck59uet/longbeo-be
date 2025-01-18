@@ -47,9 +47,9 @@ export class OrderController {
       schema: {},
     },
   })
-  async getUserOrder(@Param('id') id: string) {
+  async getUserOrder(@Query() query: AdminGetOrderRequestDto) {
     this.logger.log('========== Get user order ==========');
-    return this.orderService.getUserOrder(id);
+    return this.orderService.getUserOrder(query);
   }
 
   @CommonAuthGet({
