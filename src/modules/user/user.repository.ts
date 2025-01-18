@@ -96,7 +96,7 @@ export class UserRepository {
 
     const [count, item] = await Promise.all([
       sql.getCount(),
-      sql.skip(limit * (page - 1)).take(limit).getMany(),
+      sql.skip(limit * (page - 1)).take(limit).execute(),
     ]);
 
     return [count, item];

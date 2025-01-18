@@ -114,7 +114,7 @@ export class UserController {
         schema: {},
       },
     })
-    @Roles(UserRole.ADMIN)
+    // @Roles(UserRole.ADMIN)
     async adminGetUser(@Query() query: AdminGetUsersRequestDto) {
       this.logger.log('========== Admin get users ==========');
       return this.userService.adminGetUsers(query);
