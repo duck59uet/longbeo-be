@@ -72,11 +72,13 @@ export class OrderRepository {
   }
 
   async adminGetOrder(query: AdminGetOrderRequestDto) {
-    const { page, limit } = query;
+    const { categoryId, page, limit } = query;
     const sql = this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .innerJoin(User, 'user', 'user.id = order.user_id')
+      .orderBy('order.createdAt', 'DESC')
+      .where('service.category_id = :categoryId', { categoryId })
       .select([
         'order.id',
         'order.quantity',

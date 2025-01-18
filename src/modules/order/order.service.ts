@@ -8,6 +8,7 @@ import { UserRepository } from '../user/user.repository';
 import { ServiceRepository } from '../service/service.repository';
 import { BalanceRepository } from '../balance/balance.repository';
 import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
+import { OrderStatus } from '../../common/constants/app.constant';
 
 @Injectable()
 export class OrderService {
@@ -65,6 +66,15 @@ export class OrderService {
     try {
       const data = await this.orderRepo.adminGetOrder(query);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(OrderService.name, error);
+    }
+  }
+
+  async adminUpdateOrder(id: string): Promise<ResponseDto<any>> {
+    try {
+      await this.orderRepo.repo.update({ id }, { status: OrderStatus.COMPLETE });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
     }

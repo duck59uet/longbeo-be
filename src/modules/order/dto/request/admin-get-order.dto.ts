@@ -3,6 +3,11 @@ import { Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 
 export class AdminGetOrderRequestDto {
+  @ApiProperty({
+    example: 1,
+  })
+  categoryId: number;
+
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({

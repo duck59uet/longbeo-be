@@ -7,6 +7,7 @@ import { OrderService } from './order.service';
 import {
   CommonAuthGet,
   CommonAuthPost,
+  CommonAuthPut,
   Roles,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
@@ -65,5 +66,21 @@ export class OrderController {
   async adminGetOrder(@Query() query: AdminGetOrderRequestDto) {
     this.logger.log('========== Admin get order ==========');
     return this.orderService.adminGetOrder(query);
+  }
+
+  @CommonAuthPut({
+    url: 'admin/update/:id',
+    summary: 'admin update order status',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin update order status',
+      schema: {},
+    },
+  })
+  @Roles(UserRole.ADMIN)
+  async adminUpdateOrderStatus(@Param('id') id: string) {
+    this.logger.log('========== Admin update order status ==========');
+    return this.orderService.adminUpdateOrder(id);
   }
 }
