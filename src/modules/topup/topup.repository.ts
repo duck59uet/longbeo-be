@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Topup } from './entities/topup.entity';
 import { CreateTopupDto } from './dto/request/topup.dto';
 import { Admin } from '../admin/entities/admin.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class TopupRepository {
@@ -56,7 +57,10 @@ export class TopupRepository {
     const sql = this.repo
       .createQueryBuilder('topup')
       .innerJoin(Admin, 'admin', 'admin.id = topup.admin_id')
+      .innerJoin(User, 'user', 'user.id = topup.user_id')
       .select([
+        'user.username',
+        'user.fullname',
         'topup.id',
         'topup.amount',
         'topup.createdAt',
