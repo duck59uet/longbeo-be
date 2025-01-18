@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Topup } from './entities/topup.entity';
 import { CreateTopupDto } from './dto/request/topup.dto';
+import { Admin } from '../admin/entities/admin.entity';
 
 @Injectable()
 export class TopupRepository {
@@ -51,17 +52,27 @@ export class TopupRepository {
     return [itemCount, data];
   }
 
-  async getAdminTopupHistory(
-    limit: number,
-    page: number,
-  ): Promise<[number, Topup[]]> {
+  async getAdminTopupHistory(limit: number, page: number) {
+    const sql = this.repo
+      .createQueryBuilder('topup')
+      .innerJoin(Admin, 'admin', 'admin.id = topup.admin_id')
+      .select([
+        'topup.id',
+        'topup.amount',
+        'topup.createdAt',
+        'topup.payment_method',
+        'topup.payment_code',
+        'topup.sender',
+        'topup.content',
+        'admin.fullname',
+      ]);
+
     const [itemCount, data] = await Promise.all([
-      this.repo.count(),
-      this.repo
-        .createQueryBuilder('topup')
-        .skip(limit * (page - 1))
-        .take(limit)
-        .getMany(),
+      sql.getCount(),
+      sql
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .execute(),
     ]);
 
     return [itemCount, data];
