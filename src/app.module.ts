@@ -12,6 +12,7 @@ import { CustomConfigService } from './shared/services';
 import { OrderModule } from './modules/order/order.module';
 import { TopupModule } from './modules/topup/topup.module';
 import { ServiceModule } from './modules/service/service.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ServiceModule } from './modules/service/service.module';
     OrderModule,
     TopupModule,
     ServiceModule,
+    AdminModule,
   ],
   providers: [JwtStrategy],
   controllers: [],

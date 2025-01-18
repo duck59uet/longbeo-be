@@ -10,7 +10,7 @@ export class Topup extends BaseEntityAutoId {
   @Column({ nullable: false })
   amount: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'uuid' })
   admin_id: string;
 
   @Column({ nullable: false })

@@ -7,6 +7,7 @@ import { UserModule } from '../user/user.module';
 import { SharedModule } from '../../shared/shared.module';
 import { CustomConfigService } from '../../shared/services';
 import { JwtStrategy } from './jwt.strategy';
+import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtStrategy } from './jwt.strategy';
       inject: [CustomConfigService],
     }),
     UserModule,
+    AdminModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

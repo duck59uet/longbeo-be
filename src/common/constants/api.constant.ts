@@ -5,6 +5,7 @@ export const CONTROLLER_CONSTANTS = {
   TOPUP: 'topup',
   BALANCE: 'balance',
   SERVICE: 'service',
+  ADMIN: 'admin',
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',

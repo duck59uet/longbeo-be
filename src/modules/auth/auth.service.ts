@@ -4,11 +4,13 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDTO } from './dto/login.dto';
 import { UserRepository } from '../user/user.repository';
 import { ContextProvider } from '../../providers/contex.provider';
+import { AdminRepository } from '../admin/admin.repository';
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userRepo: UserRepository,
+    private adminRepo: AdminRepository,
   ) {}
 
   async userLogin(loginDTO: LoginDTO): Promise<string> {
@@ -32,7 +34,7 @@ export class AuthService {
   async adminLogin(loginDTO: LoginDTO): Promise<string> {
     let { username, password } = loginDTO;
 
-    const verifyUser = await this.userRepo.verifyAdmin(username, password);
+    const verifyUser = await this.adminRepo.verifyAdmin(username, password);
 
     if (!verifyUser) {
       throw new UnauthorizedException('Invalid username or password');
