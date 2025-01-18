@@ -51,4 +51,16 @@ export class TopupService {
       return ResponseDto.responseError(TopupService.name, error);
     }
   }
+
+  async getAdminTopupHistory(query: GetTopupRequestDto): Promise<ResponseDto<any>> {  
+    try {
+      const { pageSize, pageIndex } = query;
+
+      const data = await this.topUpRepo.getAdminTopupHistory(pageSize, pageIndex);
+
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(TopupService.name, error);
+    }
+  }
 }

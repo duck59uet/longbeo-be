@@ -45,4 +45,19 @@ export class TopupController {
   async getUserTopupHistory(@Query() query: GetTopupRequestDto): Promise<ResponseDto<any>> {
     return this.topupService.getUserTopupHistory(query);
   }
+
+  @CommonAuthGet({
+    url: 'admin/history',
+    summary: 'user get topup history',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'user get topup history',
+      schema: {},
+    },
+  })
+  // @Roles(UserRole.USER)
+  async getAdminTopupHistory(@Query() query: GetTopupRequestDto): Promise<ResponseDto<any>> {
+    return this.topupService.getAdminTopupHistory(query);
+  }
 }

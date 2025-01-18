@@ -51,6 +51,22 @@ export class TopupRepository {
     return [itemCount, data];
   }
 
+  async getAdminTopupHistory(
+    limit: number,
+    page: number,
+  ): Promise<[number, Topup[]]> {
+    const [itemCount, data] = await Promise.all([
+      this.repo.count(),
+      this.repo
+        .createQueryBuilder('topup')
+        .skip(limit * (page - 1))
+        .take(limit)
+        .getMany(),
+    ]);
+
+    return [itemCount, data];
+  }
+
   async getTopupById(id: string): Promise<number> {
     const result = await this.repo
       .createQueryBuilder('topup')
