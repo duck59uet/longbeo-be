@@ -3,6 +3,12 @@ import { Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 
 export class AdminGetUsersRequestDto {
+  @ApiProperty({
+    example: 10,
+    required: false,
+  })
+  username: string;
+
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({

@@ -90,6 +90,10 @@ export class UserRepository {
         'balance.balance',
       ]);
 
+    if (req.username) {
+      sql.andWhere('user.username LIKE :username', { username: `%${req.username}%` });
+    }
+
     const [count, item] = await Promise.all([
       sql.getCount(),
       sql.skip(limit * (page - 1)).take(limit).getMany(),
