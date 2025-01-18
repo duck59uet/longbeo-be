@@ -4,7 +4,7 @@ import { PaymentMethod, TopupStatus } from '../../../common/constants/app.consta
 
 @Entity({ name: 'topups' })
 export class Topup extends BaseEntityAutoId {
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'uuid' })
   user_id: string;
 
   @Column({ nullable: false })
