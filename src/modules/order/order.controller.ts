@@ -38,7 +38,7 @@ export class OrderController {
   }
 
   @CommonAuthGet({
-    url: 'user/history/:id',
+    url: 'user/history',
     summary: 'get user order',
     apiOkResponseOptions: {
       status: 200,
