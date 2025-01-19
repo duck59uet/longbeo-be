@@ -82,7 +82,7 @@ export class AdminController {
     return this.adminService.listAdmin();
   }
 
-  @CommonAuthDelete({
+  @CommonAuthPost({
     url: URL_CONSTANTS.DELETE,
     summary: 'Delete admin',
     apiOkResponseOptions: {
