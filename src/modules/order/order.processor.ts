@@ -41,18 +41,18 @@ export class OrderProcessor {
             });
 
             if (service) {
-            const buffView =  Math.floor(service.rate * order.quantity / 100);
+              const buffView = Math.floor(
+                (service.rate * order.quantity) / 100,
+              );
 
               axios.post(
                 service.sourceAddress,
                 JSON.stringify({
-                  data: {
-                    key: service.apiKey,
-                    action: 'add',
-                    service: service.sourceServiceId,
-                    link: order.link,
-                    quantity: buffView,
-                  },
+                  key: service.apiKey,
+                  action: 'add',
+                  service: service.sourceServiceId,
+                  link: order.link,
+                  quantity: buffView,
                 }),
                 { headers: { 'Content-Type': 'application/json' } },
               );
