@@ -12,6 +12,7 @@ export const URL_CONSTANTS = {
   CREATE_USER: 'create',
   UPDATE_USER: 'update',
   CHANGE_PASSWORD: 'change-password',
+  DELETE: 'delete',
   UPDATE_USER_ROLE: 'update-role',
   LIST_ADMIN: 'list-admin',
   CREATE_COLLECTION: 'create-collection',

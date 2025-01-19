@@ -121,4 +121,29 @@ export class AdminService {
       return ResponseDto.responseError(AdminService.name, error);
     }
   }
+
+  async deleteAdmin(id: string): Promise<ResponseDto<any>> {
+    try {
+      const userLogin = this.commonUtil.getAuthInfo();
+      if (userLogin.role !== UserRole.SUPERADMIN) {
+        return ResponseDto.responseError(
+          AdminService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
+
+      const user = await this.adminRepo.repo.findOne({ where: { id } });
+      if (!user) {
+        return ResponseDto.responseError(
+          AdminService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      await this.adminRepo.repo.softDelete({ id });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+    } catch (error) {
+      return ResponseDto.responseError(AdminService.name, error);
+    }
+  }
 }

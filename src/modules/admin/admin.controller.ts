@@ -5,6 +5,7 @@ import {
   URL_CONSTANTS,
 } from '../../common/constants/api.constant';
 import {
+  CommonAuthDelete,
   CommonAuthGet,
   CommonAuthPost,
   CommonPost,
@@ -61,9 +62,7 @@ export class AdminController {
       schema: {},
     },
   })
-  async changePassword(
-    @Body() body: ChangePasswordDto,
-  ) {
+  async changePassword(@Body() body: ChangePasswordDto) {
     this.logger.log('========== Change password ==========');
     return this.adminService.changePassword(body);
   }
@@ -81,5 +80,20 @@ export class AdminController {
   async listAdmin() {
     this.logger.log('========== List admin ==========');
     return this.adminService.listAdmin();
+  }
+
+  @CommonAuthDelete({
+    url: URL_CONSTANTS.DELETE,
+    summary: 'Delete admin',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Delete admin',
+      schema: {},
+    },
+  })
+  async deteleAdmin(@Query('id') id: string) {
+    this.logger.log('========== Delete admin ==========');
+    return this.adminService.deleteAdmin(id);
   }
 }
