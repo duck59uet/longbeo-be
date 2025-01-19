@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Query } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -92,7 +92,7 @@ export class AdminController {
       schema: {},
     },
   })
-  async deteleAdmin(@Query('id') id: string) {
+  async deteleAdmin(@Param('id') id: string) {
     this.logger.log('========== Delete admin ==========');
     return this.adminService.deleteAdmin(id);
   }
