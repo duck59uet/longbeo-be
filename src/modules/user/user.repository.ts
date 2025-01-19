@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
-import { User, UserRole } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Balance } from '../balance/entities/balance.entity';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class UserRepository {

@@ -5,8 +5,8 @@ import { TopupService } from './topup.service';
 import { CommonAuthGet, CommonAuthPost, Roles } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateTopupDto } from './dto/request/topup.dto';
-import { UserRole } from '../user/entities/user.entity';
 import { GetTopupRequestDto } from './dto/request/get-topup.req';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Controller(CONTROLLER_CONSTANTS.TOPUP)
 @ApiTags(CONTROLLER_CONSTANTS.TOPUP)

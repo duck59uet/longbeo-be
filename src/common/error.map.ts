@@ -43,6 +43,10 @@ export const ErrorMap = {
     Code: 'E005',
     Message: 'Service not found',
   },
+  PERMISSION_DENIED: {
+    Code: 'E006',
+    Message: 'Permission denied',
+  },
   E500: {
     Code: 'E500',
     Message: 'Server error',

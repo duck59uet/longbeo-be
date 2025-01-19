@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
 import { ResponseDto } from '../common/dtos/response.dto';
-import { UserRole } from '../modules/user/entities/user.entity';
+import { UserRole } from '../common/constants/app.constant';
 
 interface Options {
   url?: string;

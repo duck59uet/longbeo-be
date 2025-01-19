@@ -1,4 +1,4 @@
-import { UserRole } from '../../user/entities/user.entity';
+import { UserRole } from "../../../common/constants/app.constant";
 
 export class UserInfoDto {
   id: string;

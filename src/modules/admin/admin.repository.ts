@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
-import { Admin, AdminRole } from './entities/admin.entity';
+import { Admin } from './entities/admin.entity';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class AdminRepository {
@@ -56,7 +57,7 @@ export class AdminRepository {
     const user = new Admin();
     user.username = username;
     user.fullname = fullname;
-    user.role = AdminRole.ADMIN;
+    user.role = UserRole.ADMIN;
     user.phone = phone;
     user.password = hashedPassword;
     return await this.repo.save(user);

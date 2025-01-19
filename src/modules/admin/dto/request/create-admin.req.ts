@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AdminRole } from '../../entities/admin.entity';
-import { Matches, IsEmail } from 'class-validator';
+import { Matches } from 'class-validator';
 
 export class CreateAdminDto {
   @ApiProperty({

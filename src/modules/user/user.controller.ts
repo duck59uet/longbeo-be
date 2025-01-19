@@ -15,7 +15,6 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/request/create-user.req';
 import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
-import { UserRole } from './entities/user.entity';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)

@@ -1,10 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntityAutoId } from '../../../common/entities';
 import { Exclude } from 'class-transformer';
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
+import { UserRole } from '../../../common/constants/app.constant';
+
 @Entity({ name: 'users' })
 export class User extends BaseEntityAutoId {
   @Column({ nullable: false })

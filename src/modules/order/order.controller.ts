@@ -12,8 +12,8 @@ import {
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateOrderDto } from './dto/request/create-order.dto';
-import { UserRole } from '../user/entities/user.entity';
 import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Controller(CONTROLLER_CONSTANTS.ORDER)
 @ApiTags(CONTROLLER_CONSTANTS.ORDER)

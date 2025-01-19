@@ -13,7 +13,6 @@ import { ResponseDto } from '../../common/dtos';
 import { AdminService } from './admin.service';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { CreateAdminDto } from './dto/request/create-admin.req';
-import { ListAdminRequestDto } from './dto/request/list-admin.req';
 
 @Controller(CONTROLLER_CONSTANTS.ADMIN)
 @ApiTags(CONTROLLER_CONSTANTS.ADMIN)
@@ -47,7 +46,7 @@ export class AdminController {
       schema: {},
     },
   })
-  async createUser(@Body() body: CreateAdminDto) {
+  async createAdmin(@Body() body: CreateAdminDto) {
     this.logger.log('========== create new admin ==========');
     return this.adminService.createAdmin(body);
   }

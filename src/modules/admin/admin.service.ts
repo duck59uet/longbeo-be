@@ -2,11 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ResponseDto } from '../../common/dtos/response.dto';
 import { ErrorMap } from '../../common/error.map';
 import { AdminRepository } from './admin.repository';
-import { Admin, AdminRole } from './entities/admin.entity';
+import { Admin } from './entities/admin.entity';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateAdminDto } from './dto/request/create-admin.req';
 import * as bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dto/request/change-password';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class AdminService {
@@ -31,6 +32,14 @@ export class AdminService {
 
   async createAdmin(request: CreateAdminDto): Promise<ResponseDto<any>> {
     try {
+      const userLogin = this.commonUtil.getAuthInfo();
+      if (userLogin.role !== UserRole.SUPERADMIN) {
+        return ResponseDto.responseError(
+          AdminService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
+
       const { username, fullname, password, phone } = request;
       const userExist = await this.adminRepo.repo.findOne({
         where: { username },
@@ -42,14 +51,14 @@ export class AdminService {
         );
       }
 
-      const user = await this.adminRepo.createAdmin(
+      const admin = await this.adminRepo.createAdmin(
         username,
         fullname,
         password,
         phone,
       );
 
-      const { password: userPassword, ...result } = user;
+      const { password: userPassword, ...result } = admin;
       return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
     } catch (error) {
       return ResponseDto.responseError(AdminService.name, error);
@@ -100,7 +109,7 @@ export class AdminService {
       if (this.commonUtil.getAuthInfo().role === 'admin') {
         data = await this.adminRepo.repo.find({
           where: {
-            role: AdminRole.ADMIN,
+            role: UserRole.ADMIN,
             username: this.commonUtil.getAuthInfo().username,
           },
         });

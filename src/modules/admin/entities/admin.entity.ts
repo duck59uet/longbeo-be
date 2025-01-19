@@ -1,10 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntityAutoId } from '../../../common/entities';
 import { Exclude } from 'class-transformer';
-export enum AdminRole {
-  SUPERADMIN = 'SuperAdmin',
-  ADMIN = 'admin',
-}
+import { UserRole } from '../../../common/constants/app.constant';
+
 @Entity({ name: 'admins' })
 export class Admin extends BaseEntityAutoId {
   @Column({ nullable: false })
@@ -13,8 +11,8 @@ export class Admin extends BaseEntityAutoId {
   @Column({ nullable: false })
   fullname: string;
 
-  @Column({ type: 'enum', nullable: false, enum: AdminRole })
-  role: AdminRole;
+  @Column({ type: 'enum', nullable: false, enum: UserRole })
+  role: UserRole;
 
   @Column({ nullable: true})
   phone: string;

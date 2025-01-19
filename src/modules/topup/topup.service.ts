@@ -6,6 +6,7 @@ import { CommonUtil } from '../../utils/common.util';
 import { CreateTopupDto } from './dto/request/topup.dto';
 import { BalanceRepository } from '../balance/balance.repository';
 import { GetTopupRequestDto } from './dto/request/get-topup.req';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class TopupService {
@@ -22,6 +23,11 @@ export class TopupService {
   async createTopup(createTopupDto: CreateTopupDto): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
+
+      if (![UserRole.ADMIN, UserRole.SUPERADMIN].includes(authInfo.role)) {
+        return ResponseDto.responseError(TopupService.name,
+          ErrorMap.PERMISSION_DENIED,)
+      }
 
       const data = await this.topUpRepo.createTopup(
         createTopupDto,
