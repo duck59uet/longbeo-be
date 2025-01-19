@@ -27,4 +27,7 @@ export class Service extends BaseEntityIncreNumberId {
 
   @Column({ nullable: true, type: 'float', default: 100 })
   rate: number;
+
+  @Column({ nullable: true })
+  apiKey: string;
 }

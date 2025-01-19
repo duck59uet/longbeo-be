@@ -27,4 +27,7 @@ export class Order extends BaseEntityAutoId {
 
   @Column({ nullable: true })
   note: string;
+
+  @Column({ nullable: true })
+  actual_quantity: number;
 }

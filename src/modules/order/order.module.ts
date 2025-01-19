@@ -7,6 +7,7 @@ import { OrderRepository } from './order.repository';
 import { UserModule } from '../user/user.module';
 import { ServiceModule } from '../service/service.module';
 import { BalanceModule } from '../balance/balance.module';
+import { OrderProcessor } from './order.processor';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { BalanceModule } from '../balance/balance.module';
     TypeOrmModule.forFeature([Order]),
   ],
   controllers: [OrderController],
-  providers: [OrderService, OrderRepository],
+  providers: [OrderService, OrderRepository, OrderProcessor],
   exports: [OrderRepository],
 })
 export class OrderModule {}
