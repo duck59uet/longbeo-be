@@ -36,7 +36,7 @@ export class AdminController {
     return this.adminService.getAdminInfo();
   }
 
-  @CommonPost({
+  @CommonAuthPost({
     url: URL_CONSTANTS.CREATE_USER,
     summary: 'Create admin',
     apiOkResponseOptions: {
