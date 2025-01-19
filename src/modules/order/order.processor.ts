@@ -45,17 +45,21 @@ export class OrderProcessor {
                 (service.rate * order.quantity) / 100,
               );
 
-              axios.post(
-                service.sourceAddress,
-                JSON.stringify({
-                  key: service.apiKey,
-                  action: 'add',
-                  service: service.sourceServiceId,
-                  link: order.link,
-                  quantity: buffView,
-                }),
-                { headers: { 'Content-Type': 'application/json' } },
-              );
+              try {
+                await axios.post(
+                  service.sourceAddress,
+                  JSON.stringify({
+                    key: service.apiKey,
+                    action: 'add',
+                    service: service.sourceServiceId,
+                    link: order.link,
+                    quantity: buffView,
+                  }),
+                  { headers: { 'Content-Type': 'application/json' } },
+                );
+              } catch (error) {
+                console.log(error);
+              }
 
               await this.orderRepo.repo.update(
                 { id: order.id },
