@@ -8,6 +8,7 @@ import { CreateAdminDto } from './dto/request/create-admin.req';
 import * as bcrypt from 'bcrypt';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { UserRole } from '../../common/constants/app.constant';
+import { DeleteAdminRequestDto } from './dto/request/delete-admin.req';
 
 @Injectable()
 export class AdminService {
@@ -122,8 +123,9 @@ export class AdminService {
     }
   }
 
-  async deleteAdmin(id: string): Promise<ResponseDto<any>> {
+  async deleteAdmin(req: DeleteAdminRequestDto): Promise<ResponseDto<any>> {
     try {
+      const { id } = req;
       const userLogin = this.commonUtil.getAuthInfo();
       if (userLogin.role !== UserRole.SUPERADMIN) {
         return ResponseDto.responseError(

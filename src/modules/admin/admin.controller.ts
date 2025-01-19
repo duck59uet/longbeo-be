@@ -14,6 +14,7 @@ import { ResponseDto } from '../../common/dtos';
 import { AdminService } from './admin.service';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { CreateAdminDto } from './dto/request/create-admin.req';
+import { DeleteAdminRequestDto } from './dto/request/delete-admin.req';
 
 @Controller(CONTROLLER_CONSTANTS.ADMIN)
 @ApiTags(CONTROLLER_CONSTANTS.ADMIN)
@@ -92,8 +93,8 @@ export class AdminController {
       schema: {},
     },
   })
-  async deteleAdmin(@Param('id') id: string) {
+  async deteleAdmin(@Body() req: DeleteAdminRequestDto) {
     this.logger.log('========== Delete admin ==========');
-    return this.adminService.deleteAdmin(id);
+    return this.adminService.deleteAdmin(req);
   }
 }
