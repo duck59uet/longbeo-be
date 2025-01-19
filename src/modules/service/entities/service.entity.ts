@@ -24,4 +24,7 @@ export class Service extends BaseEntityIncreNumberId {
 
   @Column({ nullable: true })
   status: ServiceStatus;
+
+  @Column({ nullable: true, type: 'float', default: 100 })
+  rate: number;
 }

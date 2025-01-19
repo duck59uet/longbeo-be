@@ -21,4 +21,10 @@ export class UpdateServiceDto {
     description: 'Source Address',
   })
   sourceAddress: string;
+
+  @ApiProperty({
+    description: 'rate',
+    type: 'double',
+  })
+  rate: number;
 }
