@@ -140,7 +140,7 @@ export class AdminService {
         );
       }
 
-      await this.adminRepo.repo.softDelete({ id });
+      await this.adminRepo.repo.softDelete(user);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(AdminService.name, error);
