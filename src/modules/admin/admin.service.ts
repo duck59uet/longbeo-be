@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ResponseDto } from '../../common/dtos/response.dto';
 import { ErrorMap } from '../../common/error.map';
 import { AdminRepository } from './admin.repository';
-import { Admin } from './entities/admin.entity';
+import { Admin, AdminRole } from './entities/admin.entity';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateAdminDto } from './dto/request/create-admin.req';
 import * as bcrypt from 'bcrypt';
@@ -13,16 +13,16 @@ export class AdminService {
   private readonly logger = new Logger(AdminService.name);
   private readonly commonUtil: CommonUtil = new CommonUtil();
 
-  constructor(
-    private adminRepo: AdminRepository,
-  ) {
+  constructor(private adminRepo: AdminRepository) {
     this.logger.log('============== Constructor Admin Service ==============');
   }
 
   async getAdminInfo(): Promise<ResponseDto<Admin>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      const user = await this.adminRepo.repo.findOne({where: {id: authInfo.id}});
+      const user = await this.adminRepo.repo.findOne({
+        where: { id: authInfo.id },
+      });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
     } catch (error) {
       return ResponseDto.responseError(AdminService.name, error);
@@ -36,14 +36,17 @@ export class AdminService {
         where: { username },
       });
       if (userExist) {
-        return ResponseDto.responseError(AdminService.name, ErrorMap.USER_EXIST);
+        return ResponseDto.responseError(
+          AdminService.name,
+          ErrorMap.USER_EXIST,
+        );
       }
 
       const user = await this.adminRepo.createAdmin(
         username,
         fullname,
         password,
-        phone
+        phone,
       );
 
       const { password: userPassword, ...result } = user;
@@ -86,6 +89,25 @@ export class AdminService {
 
       const { password, ...result } = data;
       return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(AdminService.name, error);
+    }
+  }
+
+  async listAdmin(): Promise<ResponseDto<Admin[]>> {
+    try {
+      let data: Admin[];
+      if (this.commonUtil.getAuthInfo().role === 'admin') {
+        data = await this.adminRepo.repo.find({
+          where: {
+            role: AdminRole.ADMIN,
+            username: this.commonUtil.getAuthInfo().username,
+          },
+        });
+      } else {
+        data = await this.adminRepo.repo.find();
+      }
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(AdminService.name, error);
     }

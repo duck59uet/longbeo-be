@@ -1,4 +1,4 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -13,6 +13,7 @@ import { ResponseDto } from '../../common/dtos';
 import { AdminService } from './admin.service';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { CreateAdminDto } from './dto/request/create-admin.req';
+import { ListAdminRequestDto } from './dto/request/list-admin.req';
 
 @Controller(CONTROLLER_CONSTANTS.ADMIN)
 @ApiTags(CONTROLLER_CONSTANTS.ADMIN)
@@ -78,10 +79,8 @@ export class AdminController {
       schema: {},
     },
   })
-  async listAdmin(
-    @Body() body: ChangePasswordDto,
-  ) {
+  async listAdmin() {
     this.logger.log('========== List admin ==========');
-    return this.adminService.changePassword(body);
+    return this.adminService.listAdmin();
   }
 }
