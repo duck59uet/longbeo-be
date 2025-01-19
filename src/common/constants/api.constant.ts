@@ -13,6 +13,7 @@ export const URL_CONSTANTS = {
   UPDATE_USER: 'update',
   CHANGE_PASSWORD: 'change-password',
   UPDATE_USER_ROLE: 'update-role',
+  LIST_ADMIN: 'list-admin',
   CREATE_COLLECTION: 'create-collection',
   GET_COLLECTION_ID: '/:id',
   AUTH: 'auth',

@@ -12,20 +12,7 @@ export class CreateTopupDto {
   user_id: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  payment_method: PaymentMethod;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  payment_code: string;
-
-  @ApiProperty()
   @IsOptional()
   @IsString()
   sender: string;
-
-  @ApiProperty()
-  @IsOptional()
-  content: string;
 }

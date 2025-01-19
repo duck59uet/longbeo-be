@@ -67,4 +67,21 @@ export class AdminController {
     this.logger.log('========== Change password ==========');
     return this.adminService.changePassword(body);
   }
+
+  @CommonAuthGet({
+    url: URL_CONSTANTS.LIST_ADMIN,
+    summary: 'List admin',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'List admin',
+      schema: {},
+    },
+  })
+  async listAdmin(
+    @Body() body: ChangePasswordDto,
+  ) {
+    this.logger.log('========== List admin ==========');
+    return this.adminService.changePassword(body);
+  }
 }

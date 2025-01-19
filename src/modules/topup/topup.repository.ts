@@ -27,10 +27,7 @@ export class TopupRepository {
     topup.user_id = createOrderDto.user_id;
     topup.amount = createOrderDto.amount;
     topup.admin_id = userId;
-    topup.payment_method = createOrderDto.payment_method;
-    topup.payment_code = createOrderDto.payment_code;
     topup.sender = createOrderDto.sender;
-    topup.content = createOrderDto.content;
 
     return await this.repo.save(topup);
   }
@@ -64,10 +61,7 @@ export class TopupRepository {
         'topup.id',
         'topup.amount',
         'topup.createdAt',
-        'topup.payment_method',
-        'topup.payment_code',
         'topup.sender',
-        'topup.content',
         'admin.fullname',
       ]);
 
