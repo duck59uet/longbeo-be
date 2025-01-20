@@ -26,7 +26,7 @@ export class OrderService {
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<ResponseDto<any>> {
     try {
-      const { quantity, amount, service_id } = createOrderDto;
+      const { quantity, amount, service_id, service_time_id } = createOrderDto;
 
       const authInfo = this.commonUtil.getAuthInfo();
       const userBalance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });

@@ -13,11 +13,6 @@ export class UpdateServiceDto {
   price: number;
 
   @ApiProperty({
-    description: 'Service ID',
-  })
-  sourceServiceId: string;
-
-  @ApiProperty({
     description: 'Source Address',
   })
   sourceAddress: string;

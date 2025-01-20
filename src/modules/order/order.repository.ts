@@ -33,6 +33,7 @@ export class OrderRepository {
     order.amount = createOrderDto.amount;
     order.price = price;
     order.service_id = createOrderDto.service_id;
+    order.service_time_id = createOrderDto.service_time_id;
     order.status = OrderStatus.PENDING;
     return await this.repo.save(order);
   }

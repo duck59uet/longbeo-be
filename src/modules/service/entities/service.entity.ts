@@ -17,9 +17,6 @@ export class Service extends BaseEntityIncreNumberId {
   description: string;
 
   @Column({ nullable: true })
-  sourceServiceId: string;
-
-  @Column({ nullable: true })
   sourceAddress: string;
 
   @Column({ nullable: true })

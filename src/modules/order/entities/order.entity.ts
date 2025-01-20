@@ -13,7 +13,7 @@ export class Order extends BaseEntityAutoId {
   @Column({ nullable: false })
   quantity: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   amount: number;
 
   @Column({ nullable: false })
@@ -23,6 +23,9 @@ export class Order extends BaseEntityAutoId {
   service_id: number;
 
   @Column({ nullable: false })
+  service_time_id: number;
+
+  @Column({ nullable: false })
   status: OrderStatus;
 
   @Column({ nullable: true })
@@ -30,4 +33,7 @@ export class Order extends BaseEntityAutoId {
 
   @Column({ nullable: true })
   actual_quantity: number;
+
+  @Column({ nullable: true })
+  source_order_id: string;
 }

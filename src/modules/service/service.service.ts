@@ -33,9 +33,9 @@ export class ServiceService {
         return ResponseDto.responseError(ServiceRepository.name, ErrorMap.SERVICE_NOT_FOUND);
       }
 
-      const { name, sourceServiceId, sourceAddress, price, rate} = body;
+      const { name, sourceAddress, price, rate} = body;
 
-      await this.serviceRepo.repo.update({ id }, { name, sourceServiceId, sourceAddress, price, rate });
+      await this.serviceRepo.repo.update({ id }, { name, sourceAddress, price, rate });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(ServiceRepository.name, error);

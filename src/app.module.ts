@@ -13,6 +13,7 @@ import { OrderModule } from './modules/order/order.module';
 import { TopupModule } from './modules/topup/topup.module';
 import { ServiceModule } from './modules/service/service.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { ServiceTimeModule } from './modules/service_time/service_time.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { AdminModule } from './modules/admin/admin.module';
     TopupModule,
     ServiceModule,
     AdminModule,
+    ServiceTimeModule
   ],
   providers: [JwtStrategy],
   controllers: [],

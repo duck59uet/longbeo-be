@@ -19,6 +19,10 @@ export class CreateOrderDto {
   service_id: number;
 
   @ApiProperty()
+  @IsNotEmpty()
+  service_time_id: number;
+
+  @ApiProperty()
   @IsOptional()
   @IsString()
   note: string;

@@ -6,6 +6,7 @@ export const CONTROLLER_CONSTANTS = {
   BALANCE: 'balance',
   SERVICE: 'service',
   ADMIN: 'admin',
+  SERVICE_TIME: 'service_time', 
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',

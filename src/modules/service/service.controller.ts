@@ -14,8 +14,8 @@ import { UserRole } from '../../common/constants/app.constant';
 
 @Controller(CONTROLLER_CONSTANTS.SERVICE)
 @ApiTags(CONTROLLER_CONSTANTS.SERVICE)
-export class BalanceController {
-  public readonly logger = new Logger(BalanceController.name);
+export class ServiceController {
+  public readonly logger = new Logger(ServiceController.name);
 
   constructor(private serviceService: ServiceService) {}
 
