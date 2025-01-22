@@ -8,6 +8,12 @@ export class CreateServiceTimeDto {
   serviceId: number;
 
   @ApiProperty({
+    description: 'Time',
+    required: true,
+  })
+  time: string;
+
+  @ApiProperty({
     description: 'Source service ID',
     required: true,
   })

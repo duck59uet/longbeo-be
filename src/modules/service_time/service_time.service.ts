@@ -61,8 +61,8 @@ export class ServiceTimeService {
     body: CreateServiceTimeDto,
   ): Promise<ResponseDto<any>> {
     try {
-      const { serviceId, sourceServiceId } = body;
-      await this.serviceTimeRepo.repo.save({ serviceId, sourceServiceId });
+      const { serviceId, sourceServiceId, time } = body;
+      await this.serviceTimeRepo.repo.save({ serviceId, sourceServiceId, time });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);
