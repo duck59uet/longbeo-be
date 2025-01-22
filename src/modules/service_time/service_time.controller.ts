@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Param } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { ServiceTimeService } from './service_time.service';
@@ -10,6 +10,7 @@ import {
 import { ResponseDto } from '../../common/dtos';
 import { UpdateServiceTimeDto } from './dto/update-service-time.req';
 import { CreateServiceTimeDto } from './dto/create-service-time.req';
+import { GetServiceTimeDto } from './dto/get-service-time.dto';
 
 @Controller(CONTROLLER_CONSTANTS.SERVICE_TIME)
 @ApiTags(CONTROLLER_CONSTANTS.SERVICE_TIME)
@@ -19,7 +20,7 @@ export class ServiceTimeController {
   constructor(private serviceTimeService: ServiceTimeService) {}
 
   @CommonGet({
-    url: ':categoryId',
+    url: 'getServiceTime',
     summary: 'Get all services times',
     apiOkResponseOptions: {
       status: 200,
@@ -28,10 +29,10 @@ export class ServiceTimeController {
       schema: {},
     },
   })
-  async getService(
-    @Param('serviceId') serviceId: number,
+  async getServiceTime(
+    @Query() query: GetServiceTimeDto
   ): Promise<ResponseDto<any>> {
-    return this.serviceTimeService.getServiceTimes(serviceId);
+    return this.serviceTimeService.getServiceTimes(query);
   }
 
   @CommonAuthPut({
@@ -64,5 +65,21 @@ export class ServiceTimeController {
     @Body() body: CreateServiceTimeDto,
   ): Promise<ResponseDto<any>> {
     return this.serviceTimeService.createServiceTime(body);
+  }
+
+  @CommonGet({
+    url: 'get service time with service id',
+    summary: 'get service time with service id',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'get service time with service id',
+      schema: {},
+    },
+  })
+  async getServiceTimeWithServiceId(
+    @Param('serviceId') serviceId: number,
+  ): Promise<ResponseDto<any>> {
+    return this.serviceTimeService.getServiceTimeWithServiceId(serviceId);
   }
 }
