@@ -68,7 +68,7 @@ export class ServiceTimeController {
   }
 
   @CommonGet({
-    url: 'get service time with service id',
+    url: 'detail/:serviceId',
     summary: 'get service time with service id',
     apiOkResponseOptions: {
       status: 200,
