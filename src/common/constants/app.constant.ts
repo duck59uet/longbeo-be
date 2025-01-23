@@ -27,7 +27,7 @@ export enum TopupStatus {
 
 export enum ServiceStatus {
   ACTIVE = 1,
-  INACTIVE = 2,
+  INACTIVE = 0,
 }
 
 export enum UserRole {
