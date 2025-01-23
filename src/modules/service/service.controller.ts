@@ -3,10 +3,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { ServiceService } from './service.service';
 import {
-  CommonAuthPost,
+  CommonAuthGet,
   CommonAuthPut,
   CommonGet,
-  Roles,
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { UpdateServiceDto } from './dto/update-service.req';
@@ -35,6 +34,22 @@ export class ServiceController {
     return this.serviceService.getService(categoryId);
   }
 
+  @CommonAuthGet({
+    url: 'all/:categoryId',
+    summary: 'Admin get all services',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Admin get all services',
+      schema: {},
+    },
+  })
+  async getAdminService(
+    @Param('categoryId') categoryId: number,
+  ): Promise<ResponseDto<any>> {
+    return this.serviceService.getAdminService(categoryId);
+  }
+
   @CommonAuthPut({
     url: ':id',
     summary: 'Update service',
@@ -45,11 +60,26 @@ export class ServiceController {
       schema: {},
     },
   })
-  @Roles(UserRole.ADMIN)
   async updateService(
     @Param('id') id: number,
     @Body() body: UpdateServiceDto,
   ): Promise<ResponseDto<any>> {
     return this.serviceService.updateService(id, body);
+  }
+
+  @CommonAuthPut({
+    url: 'status/:id',
+    summary: 'Update service status',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Update service status',
+      schema: {},
+    },
+  })
+  async updateServiceStatus(
+    @Param('id') id: number,
+  ): Promise<ResponseDto<any>> {
+    return this.serviceService.updateServiceStatus(id);
   }
 }
