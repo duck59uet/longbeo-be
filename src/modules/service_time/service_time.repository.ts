@@ -22,6 +22,7 @@ export class ServiceTimeRepository {
       .createQueryBuilder('service_time')
       .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
       .where('service.categoryId = :categoryId', { categoryId })
+      .andWhere('service_time.deletedAt IS NULL')
       .orderBy('service_time.id', 'ASC')
       .select([
         'service_time.id as id',

@@ -10,6 +10,7 @@ import { ServiceRepository } from '../service/service.repository';
 import { In } from 'typeorm';
 import { GetServiceTimeDto } from './dto/get-service-time.dto';
 import { UserRole } from '../../common/constants/app.constant';
+import { DeleteServiceTimeDto } from './dto/delete-service-time.req';
 
 @Injectable()
 export class ServiceTimeService {
@@ -95,7 +96,7 @@ export class ServiceTimeService {
     }
   }
 
-  async deleteServiceTime(id: number): Promise<ResponseDto<any>> {
+  async deleteServiceTime(req: DeleteServiceTimeDto): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
       if (authInfo.role === UserRole.USER) {
@@ -105,7 +106,7 @@ export class ServiceTimeService {
         );
       }
 
-      await this.serviceTimeRepo.repo.softDelete({ id });
+      await this.serviceTimeRepo.repo.softDelete({ id: req.id });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);

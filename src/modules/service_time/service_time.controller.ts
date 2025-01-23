@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { ServiceTimeService } from './service_time.service';
 import {
+  CommonAuthDelete,
   CommonAuthPost,
   CommonAuthPut,
   CommonGet,
@@ -11,6 +12,7 @@ import { ResponseDto } from '../../common/dtos';
 import { UpdateServiceTimeDto } from './dto/update-service-time.req';
 import { CreateServiceTimeDto } from './dto/create-service-time.req';
 import { GetServiceTimeDto } from './dto/get-service-time.dto';
+import { DeleteServiceTimeDto } from './dto/delete-service-time.req';
 
 @Controller(CONTROLLER_CONSTANTS.SERVICE_TIME)
 @ApiTags(CONTROLLER_CONSTANTS.SERVICE_TIME)
@@ -81,5 +83,21 @@ export class ServiceTimeController {
     @Param('serviceId') serviceId: number,
   ): Promise<ResponseDto<any>> {
     return this.serviceTimeService.getServiceTimeWithServiceId(serviceId);
+  }
+
+  @CommonAuthPost({
+    url: ':id',
+    summary: 'Delete service time',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Delete service time',
+      schema: {},
+    },
+  })
+  async deleteServiceTime(
+    @Body() req: DeleteServiceTimeDto,
+  ): Promise<ResponseDto<any>> {
+    return this.serviceTimeService.deleteServiceTime(req);
   }
 }
