@@ -57,12 +57,13 @@ export class ServiceService {
       }
 
       const service = await this.serviceRepo.repo.findOne({ where: { id } });
+      let status: number;
       service.status === ServiceStatus.ACTIVE
-        ? ServiceStatus.INACTIVE
-        : ServiceStatus.ACTIVE;
+        ? status = ServiceStatus.INACTIVE
+        : status = ServiceStatus.ACTIVE;
       const result = await this.serviceRepo.repo.update(
         { id },
-        { status: service.status },
+        { status },
       );
 
       return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
