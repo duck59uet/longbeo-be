@@ -9,6 +9,7 @@ import { ServiceTime } from './entities/service_time.entity';
 import { ServiceRepository } from '../service/service.repository';
 import { In } from 'typeorm';
 import { GetServiceTimeDto } from './dto/get-service-time.dto';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class ServiceTimeService {
@@ -38,6 +39,13 @@ export class ServiceTimeService {
     body: UpdateServiceTimeDto,
   ): Promise<ResponseDto<any>> {
     try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      if (authInfo.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          ServiceTimeService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
       const service = await this.serviceTimeRepo.repo.findOne({
         where: { id },
       });
@@ -48,9 +56,9 @@ export class ServiceTimeService {
         );
       }
 
-      const { sourceServiceId } = body;
+      const { sourceServiceId, time } = body;
 
-      await this.serviceTimeRepo.repo.update({ id }, { sourceServiceId });
+      await this.serviceTimeRepo.repo.update({ id }, { sourceServiceId, time });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);
@@ -61,6 +69,13 @@ export class ServiceTimeService {
     body: CreateServiceTimeDto,
   ): Promise<ResponseDto<any>> {
     try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      if (authInfo.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          ServiceTimeService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
       const { serviceId, sourceServiceId, time } = body;
       await this.serviceTimeRepo.repo.save({ serviceId, sourceServiceId, time });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
@@ -75,6 +90,23 @@ export class ServiceTimeService {
     try {
       const result = await this.serviceTimeRepo.repo.find({ where: { serviceId } });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(ServiceTimeService.name, error);
+    }
+  }
+
+  async deleteServiceTime(id: number): Promise<ResponseDto<any>> {
+    try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      if (authInfo.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          ServiceTimeService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
+
+      await this.serviceTimeRepo.repo.softDelete({ id });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);
     }
