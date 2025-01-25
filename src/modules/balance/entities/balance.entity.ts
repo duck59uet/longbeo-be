@@ -6,6 +6,6 @@ export class Balance extends BaseEntityAutoId {
   @Column({ nullable: false, type: 'uuid' })
   user_id: string;
 
-  @Column({ nullable: false, type: 'float' })
+  @Column({ nullable: true, type: 'float' })
   balance: number;
 }

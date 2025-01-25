@@ -32,7 +32,7 @@ export class OrderService {
       const userBalance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });
 
       const server = await this.serviceRepo.repo.findOne({ where: { id: service_id } });
-      const price = Number(server.price) * Number(quantity) * Number(amount);
+      const price = Number((Number(server.price) * Number(quantity) * Number(amount)).toFixed(2));
 
       if (userBalance.balance < price) {
         return ResponseDto.responseError(OrderService.name, ErrorMap.BALANCE_NOT_ENOUGH);
