@@ -86,7 +86,7 @@ export class ServiceTimeController {
   }
 
   @CommonAuthPost({
-    url: ':id',
+    url: 'delete',
     summary: 'Delete service time',
     apiOkResponseOptions: {
       status: 200,
