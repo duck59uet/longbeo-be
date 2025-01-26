@@ -23,7 +23,7 @@ export class ServiceTimeRepository {
       .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
       .where('service.categoryId = :categoryId', { categoryId })
       .andWhere('service_time.deletedAt IS NULL')
-      .orderBy('service_time.id', 'ASC')
+      .orderBy('service_time.time', 'ASC')
       .select([
         'service_time.id as id',
         'service_time.serviceId as "serviceId"',
