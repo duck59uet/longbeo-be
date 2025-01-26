@@ -113,4 +113,32 @@ export class OrderRepository {
 
     return [count, item];
   }
+
+  async exportOrderHistory(
+    startDate: Date,
+    endDate: Date,
+    categoryId: number,
+  ) {
+    const sql = this.repo
+      .createQueryBuilder('order')
+      .innerJoin(Service, 'service', 'service.id = order.service_id')
+      .innerJoin(User, 'user', 'user.id = order.user_id')
+      .where('service.categoryId = :categoryId', { categoryId })
+      .andWhere('order.createdAt >= :startDate', { startDate })
+      .andWhere('order.createdAt <= :endDate', { endDate })
+      .select([
+        'order.quantity as quantity',
+        'order.amount as amount',
+        'order.price as price',
+        'order.createdAt as "createdAt"',
+        'order.link as link',
+        'order.status',
+        'user.username as username',
+        'user.fullname as fullname',
+        'service.name as "serviceName"',
+        'service.price as "servicePrice"',
+      ]);
+
+    return sql.execute();
+  }
 }

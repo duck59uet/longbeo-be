@@ -1,8 +1,6 @@
-import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  CONTROLLER_CONSTANTS,
-} from '../../common/constants/api.constant';
+import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { OrderService } from './order.service';
 import {
   CommonAuthGet,
@@ -14,6 +12,8 @@ import { ResponseDto } from '../../common/dtos';
 import { CreateOrderDto } from './dto/request/create-order.dto';
 import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 import { UserRole } from '../../common/constants/app.constant';
+import { ExportCsvOrderDto } from './dto/request/export-csv.req';
+import { Response } from 'express';
 
 @Controller(CONTROLLER_CONSTANTS.ORDER)
 @ApiTags(CONTROLLER_CONSTANTS.ORDER)
@@ -82,5 +82,37 @@ export class OrderController {
   async adminUpdateOrderStatus(@Param('id') id: string) {
     this.logger.log('========== Admin update order status ==========');
     return this.orderService.adminUpdateOrder(id);
+  }
+
+  @CommonAuthGet({
+    url: 'admin/exportHistory',
+    summary: 'admin export order history',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin export order history',
+      schema: {},
+    },
+  })
+  async exportTopupHistory(
+    @Query() query: ExportCsvOrderDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const csvBuffer = await this.orderService.generateCsv(query);
+
+      // Set response headers for file download
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=orderHistory.csv',
+      );
+  
+      // Gửi nội dung CSV
+      res.send(csvBuffer);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      res.status(500).send('An error occurred while exporting CSV');
+    }
   }
 }
