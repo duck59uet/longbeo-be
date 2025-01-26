@@ -15,7 +15,7 @@ export class BalanceService {
     private balanceRepo: BalanceRepository,
     private userRepo: UserRepository,
   ) {
-    this.logger.log('============== Constructor Order Service ==============');
+    this.logger.log('============== Constructor Balance Service ==============');
   }
 
   async updateBalance(updateBalance: CreateBalanceDto): Promise<ResponseDto<any>> {

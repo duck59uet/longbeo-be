@@ -14,6 +14,7 @@ import { TopupModule } from './modules/topup/topup.module';
 import { ServiceModule } from './modules/service/service.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { ServiceTimeModule } from './modules/service_time/service_time.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -52,7 +53,8 @@ import { ServiceTimeModule } from './modules/service_time/service_time.module';
     TopupModule,
     ServiceModule,
     AdminModule,
-    ServiceTimeModule
+    ServiceTimeModule,
+    CategoryModule
   ],
   providers: [JwtStrategy],
   controllers: [],
