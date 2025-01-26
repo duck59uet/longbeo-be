@@ -85,11 +85,11 @@ export class ServiceService {
         );
       }
 
-      const { name, sourceAddress, price, rate } = body;
+      const { name, sourceAddress, price, rate, apiKey } = body;
 
       await this.serviceRepo.repo.update(
         { id },
-        { name, sourceAddress, price, rate },
+        { name, sourceAddress, price, rate, apiKey },
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {

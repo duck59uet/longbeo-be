@@ -22,4 +22,9 @@ export class UpdateServiceDto {
     type: 'double',
   })
   rate: number;
+
+  @ApiProperty({
+    description: 'API Key',
+  })
+  apiKey: string;
 }
