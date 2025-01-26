@@ -89,8 +89,12 @@ export class ServiceTimeService {
     serviceId: number,
   ): Promise<ResponseDto<any>> {
     try {
-      const result = await this.serviceTimeRepo.repo.find({ where: { serviceId }, order: { time: 'ASC' } });
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+      const result = await this.serviceTimeRepo.repo.find({ where: { serviceId } });
+      const sortedResult = result.sort((a, b) => {
+        return parseInt(a.time, 10) - parseInt(b.time, 10);
+      });
+  
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, sortedResult);
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);
     }
