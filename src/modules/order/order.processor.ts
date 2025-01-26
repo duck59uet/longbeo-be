@@ -65,7 +65,7 @@ export class OrderProcessor {
                 if (result.status === 200) {
                   await this.orderRepo.repo.update(
                     { id: order.id },
-                    { status: OrderStatus.COMPLETE, actual_quantity: buffView, source_order_id: result.data.order_id },
+                    { status: OrderStatus.COMPLETE, actual_quantity: buffView, source_order_id: result.data.order },
                   );
                 } 
 
