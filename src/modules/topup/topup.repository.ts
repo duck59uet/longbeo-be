@@ -84,4 +84,22 @@ export class TopupRepository {
       .execute();
     return result[0].total;
   }
+
+  async exportTopupHistory(startDate: Date, endDate: Date) {
+    return this.repo
+      .createQueryBuilder('topup')
+      .leftJoin(Admin, 'admin', 'admin.id = topup.admin_id')
+      .leftJoin(User, 'user', 'user.id = topup.user_id')
+      .select([
+        'user.username as username',
+        'user.fullname as fullname',
+        'topup.amount as amount',
+        'topup.createdAt as "createdAt"',
+        'topup.sender as sender',
+        'admin.fullname as admin',
+      ])
+      .where('topup.createdAt >= :startDate', { startDate })
+      .andWhere('topup.createdAt <= :endDate', { endDate })
+      .execute();
+  }
 }

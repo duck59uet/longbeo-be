@@ -57,6 +57,7 @@
     "class-validator": "^0.14.0",
     "cosmjs-types": "^0.6.1",
     "crypto-js": "^4.2.0",
+    "csv-writer": "^1.6.0",
     "dotenv": "^16.0.3",
     "ethereumjs-util": "^7.1.5",
     "ethers": "^6.13.1",
