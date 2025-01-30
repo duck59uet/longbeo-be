@@ -17,7 +17,7 @@ export class ServiceTimeRepository {
     );
   }
 
-  async getServiceTimes(categoryId: number, limit: number, page: number) {
+  async getServiceTimes(categoryId: number, limit: number, page: number, serviceId?: number) {
     const sql = this.repo
       .createQueryBuilder('service_time')
       .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
@@ -32,6 +32,11 @@ export class ServiceTimeRepository {
         'service.name as "serviceName"',
         'service.sourceAddress as "sourceAddress"',
       ]);
+
+    if (serviceId) {
+      sql.andWhere('service_time.serviceId = :serviceId', { serviceId });
+    }
+    
     const [count, item] = await Promise.all([
       sql.getCount(),
       sql
