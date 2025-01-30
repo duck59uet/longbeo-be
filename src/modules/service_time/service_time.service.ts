@@ -26,9 +26,9 @@ export class ServiceTimeService {
 
   async getServiceTimes(query: GetServiceTimeDto): Promise<ResponseDto<any>> {
     try {
-      const { limit, page, categoryId } = query;
+      const { limit, page, categoryId, serviceId } = query;
 
-      const data = await this.serviceTimeRepo.getServiceTimes(categoryId, limit, page);
+      const data = await this.serviceTimeRepo.getServiceTimes(categoryId, limit, page, serviceId);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(ServiceTimeService.name, error);
