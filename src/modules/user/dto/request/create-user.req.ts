@@ -31,4 +31,9 @@ export class CreateUserDto {
     description: 'Phone number',
   })
   phone: string;
+
+  @ApiProperty({
+    description: 'Refer user',
+  })
+  referUser: string;
 }

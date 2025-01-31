@@ -54,6 +54,7 @@ export class UserRepository {
     email: string,
     password: string,
     phone: string,
+    referUser: string,
   ): Promise<User> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -64,6 +65,7 @@ export class UserRepository {
     user.email = email;
     user.phone = phone;
     user.password = hashedPassword;
+    user.referUser = referUser;
     return await this.repo.save(user);
   }
 
@@ -88,6 +90,7 @@ export class UserRepository {
         'user.email',
         'user.phone',
         'user.role',
+        'user.referUser',
         'balance.balance',
       ]);
 
