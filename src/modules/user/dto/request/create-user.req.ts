@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Matches, IsEmail } from 'class-validator';
+import { Matches, IsEmail, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -35,5 +35,6 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Refer user',
   })
+  @IsOptional()
   referUser: string;
 }
