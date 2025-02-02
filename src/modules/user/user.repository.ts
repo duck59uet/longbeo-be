@@ -105,4 +105,23 @@ export class UserRepository {
 
     return [count, item];
   }
+
+  async exportUsersList(){
+    const sql = this.repo
+      .createQueryBuilder('user')
+      .leftJoin(Balance, 'balance', 'balance.user_id = user.id')
+      .leftJoin(User, 'referUser', 'referUser.username = user.referUser')
+      .where('user.role = :role', { role: UserRole.USER })
+      .select([
+        'user.username as username',
+        'user.fullname as fullname',
+        'user.email as email',
+        'user.phone as phone',
+        'balance.balance as balance',
+        'referUser.username as refername',
+        'referUser.fullname as referfullname',
+      ]);
+
+    return sql.execute();
+  }
 }

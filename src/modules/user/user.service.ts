@@ -12,6 +12,7 @@ import { TopupRepository } from '../topup/topup.repository';
 import { OrderRepository } from '../order/order.repository';
 import { BalanceRepository } from '../balance/balance.repository';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
+import { unparse } from 'papaparse';
 
 @Injectable()
 export class UserService {
@@ -30,7 +31,9 @@ export class UserService {
   async getUserInfo(): Promise<ResponseDto<User>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      const user = await this.userRepo.repo.findOne({where: {id: authInfo.id}});
+      const user = await this.userRepo.repo.findOne({
+        where: { id: authInfo.id },
+      });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
@@ -53,7 +56,7 @@ export class UserService {
         email,
         password,
         phone,
-        referUser
+        referUser,
       );
 
       const { password: userPassword, ...result } = user;
@@ -134,8 +137,10 @@ export class UserService {
   async getUserBalance(): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      
-      const balance = await this.balanceRepo.repo.findOne({ where: { user_id: authInfo.id } });
+
+      const balance = await this.balanceRepo.repo.findOne({
+        where: { user_id: authInfo.id },
+      });
       const topup = await this.topupRepo.getTopupById(authInfo.id);
       const order = await this.orderRepo.getOrderById(authInfo.id);
 
@@ -143,7 +148,7 @@ export class UserService {
         balance: balance.balance,
         topup: Number(topup),
         order: Number(order),
-      }
+      };
 
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
@@ -155,6 +160,31 @@ export class UserService {
     try {
       const data = await this.userRepo.adminGetUsers(req);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(UserService.name, error);
+    }
+  }
+
+  async generateCsv(): Promise<any> {
+    try {
+      const data = await this.userRepo.exportUsersList();
+
+      // Dữ liệu CSV
+      const csvData = data.map((record: any) => ({
+        'Tên tài khoản': record.username,
+        'Tên đầy chủ': record.fullname,
+        'Email': record.email,
+        'Số điện thoại': record.phone,
+        'Số dư': record.balance,
+        'Tài khoản giới thiệu': record.refername,
+        'Tên người giới thiệu': record.referfullname,
+      }));
+
+      // Tạo CSV string với BOM (UTF-8)
+      const BOM = '\uFEFF';
+      const csvContent = BOM + unparse(csvData, { header: true });
+
+      return csvContent;
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }

@@ -30,7 +30,7 @@ export class ServiceService {
   async getAdminService(categoryId: number): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      if (authInfo.role === UserRole.USER) {
+      if (authInfo.role !== UserRole.SUPERADMIN) {
         return ResponseDto.responseError(
           ServiceRepository.name,
           ErrorMap.PERMISSION_DENIED,
@@ -49,7 +49,7 @@ export class ServiceService {
   async updateServiceStatus(id: number): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
-      if (authInfo.role === UserRole.USER) {
+      if (authInfo.role !== UserRole.SUPERADMIN) {
         return ResponseDto.responseError(
           ServiceRepository.name,
           ErrorMap.PERMISSION_DENIED,
@@ -77,6 +77,13 @@ export class ServiceService {
     body: UpdateServiceDto,
   ): Promise<ResponseDto<any>> {
     try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      if (authInfo.role !== UserRole.SUPERADMIN) {
+        return ResponseDto.responseError(
+          ServiceRepository.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
       const service = await this.serviceRepo.repo.findOne({ where: { id } });
       if (!service) {
         return ResponseDto.responseError(

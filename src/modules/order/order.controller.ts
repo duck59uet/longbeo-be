@@ -101,14 +101,12 @@ export class OrderController {
     try {
       const csvBuffer = await this.orderService.generateCsv(query);
 
-      // Set response headers for file download
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader(
         'Content-Disposition',
         'attachment; filename=orderHistory.csv',
       );
   
-      // Gửi nội dung CSV
       res.send(csvBuffer);
     } catch (error) {
       console.error('Error exporting CSV:', error);

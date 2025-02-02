@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
+import { Body, Controller, Logger, Param, Query, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -16,6 +16,7 @@ import { CreateUserDto } from './dto/request/create-user.req';
 import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
+import { Response } from 'express';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -64,9 +65,7 @@ export class UserController {
       schema: {},
     },
   })
-  async updateUser(
-    @Body() body: UpdateUserDto,
-  ) {
+  async updateUser(@Body() body: UpdateUserDto) {
     this.logger.log('========== update user ==========');
     return this.userService.updateUser(body);
   }
@@ -81,9 +80,7 @@ export class UserController {
       schema: {},
     },
   })
-  async changePassword(
-    @Body() body: ChangePasswordDto,
-  ) {
+  async changePassword(@Body() body: ChangePasswordDto) {
     this.logger.log('========== Change password ==========');
     return this.userService.changePassword(body);
   }
@@ -104,18 +101,47 @@ export class UserController {
   }
 
   @CommonAuthGet({
-      url: 'admin/getUsers',
-      summary: 'admin get users',
-      apiOkResponseOptions: {
-        status: 200,
-        type: ResponseDto,
-        description: 'admin get order',
-        schema: {},
-      },
-    })
-    // @Roles(UserRole.ADMIN)
-    async adminGetUser(@Query() query: AdminGetUsersRequestDto) {
-      this.logger.log('========== Admin get users ==========');
-      return this.userService.adminGetUsers(query);
+    url: 'admin/getUsers',
+    summary: 'admin get users',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin get order',
+      schema: {},
+    },
+  })
+  // @Roles(UserRole.ADMIN)
+  async adminGetUser(@Query() query: AdminGetUsersRequestDto) {
+    this.logger.log('========== Admin get users ==========');
+    return this.userService.adminGetUsers(query);
+  }
+
+  @CommonAuthGet({
+    url: 'admin/exportUser',
+    summary: 'admin export user list',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin export user list',
+      schema: {},
+    },
+  })
+  async exportUserList(
+    @Res() res: Response,
+  ) {
+    try {
+      const csvBuffer = await this.userService.generateCsv();
+
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=userList.csv',
+      );
+
+      res.send(csvBuffer);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      res.status(500).send('An error occurred while exporting CSV');
     }
+  }
 }
