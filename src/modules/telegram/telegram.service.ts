@@ -20,7 +20,7 @@ export class TelegramService {
     try {
       const url = `${this.apiUrl}/sendMessage`;
       const response = await axios.post(url, {
-        chat_id: 1,
+        chat_id: -4609945257,
         text: message,
       });
       this.logger.log(`Tin nhắn đã gửi: ${JSON.stringify(response.data)}`);
