@@ -9,6 +9,7 @@ import { ServiceModule } from '../service/service.module';
 import { BalanceModule } from '../balance/balance.module';
 import { OrderProcessor } from './order.processor';
 import { ServiceTimeModule } from '../service_time/service_time.module';
+import { TelegramModule } from '../telegram/telegram.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ServiceTimeModule } from '../service_time/service_time.module';
     forwardRef(() => BalanceModule),
     forwardRef(() => ServiceTimeModule),
     TypeOrmModule.forFeature([Order]),
+    TelegramModule,
   ],
   controllers: [OrderController],
   providers: [OrderService, OrderRepository, OrderProcessor],

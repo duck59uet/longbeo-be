@@ -16,11 +16,11 @@ export class TelegramService {
     this.apiUrl = `https://api.telegram.org/bot${this.botToken}`;
   }
 
-  async sendMessage(chatId: string | number, message: string): Promise<any> {
+  async sendMessage(message: string): Promise<any> {
     try {
       const url = `${this.apiUrl}/sendMessage`;
       const response = await axios.post(url, {
-        chat_id: chatId,
+        chat_id: 1,
         text: message,
       });
       this.logger.log(`Tin nhắn đã gửi: ${JSON.stringify(response.data)}`);

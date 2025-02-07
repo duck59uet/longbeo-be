@@ -9,6 +9,7 @@ import { GetTopupRequestDto } from './dto/request/get-topup.req';
 import { UserRole } from '../../common/constants/app.constant';
 import { ExportCsvTopupDto } from './dto/request/export-csv.req';
 import * as csvWriter from 'csv-writer';
+import { TelegramService } from '../telegram/telegram.service';
 
 @Injectable()
 export class TopupService {
@@ -18,6 +19,7 @@ export class TopupService {
   constructor(
     private topupRepo: TopupRepository,
     private balanceRepo: BalanceRepository,
+    private teleService: TelegramService,
   ) {
     this.logger.log('============== Constructor Order Service ==============');
   }
@@ -42,6 +44,10 @@ export class TopupService {
         user_id: createTopupDto.user_id,
         amount: createTopupDto.amount,
       });
+
+      await this.teleService.sendMessage(
+        `Admin ${authInfo.username} đã nạp ${createTopupDto.amount} cho tài khoản ${createTopupDto.user_id}`,
+      );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(TopupService.name, error);
