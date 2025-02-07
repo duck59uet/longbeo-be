@@ -45,9 +45,9 @@ export class TopupService {
         amount: createTopupDto.amount,
       });
 
-      await this.teleService.sendMessage(
-        `Admin ${authInfo.username} đã nạp ${createTopupDto.amount} cho tài khoản ${createTopupDto.user_id}`,
-      );
+      // await this.teleService.sendMessage(
+      //   `Admin ${authInfo.username} đã nạp ${createTopupDto.amount} cho tài khoản ${createTopupDto.user_id}`,
+      // );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(TopupService.name, error);

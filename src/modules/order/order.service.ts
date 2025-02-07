@@ -61,9 +61,9 @@ export class OrderService {
         authInfo.id,
       );
 
-      await this.teleService.sendMessage(
-        `Đã tạo đơn hàng mới: ${data.id} - ${authInfo.username} - ${server.name} - ${quantity} - ${amount} - ${price}`,
-      );
+      // await this.teleService.sendMessage(
+      //   `Đã tạo đơn hàng mới: ${data.id} - ${authInfo.username} - ${server.name} - ${quantity} - ${amount} - ${price}`,
+      // );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
