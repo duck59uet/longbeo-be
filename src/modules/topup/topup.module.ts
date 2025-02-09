@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TopupController } from './topup.controller';
 import { TopupService } from './topup.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ import { TelegramModule } from '../telegram/telegram.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [BalanceModule, TypeOrmModule.forFeature([Topup]), TelegramModule, UserModule],
+  imports: [BalanceModule, TypeOrmModule.forFeature([Topup]), TelegramModule, forwardRef(() => UserModule),],
   controllers: [TopupController],
   providers: [TopupService, TopupRepository],
   exports: [TopupRepository]
