@@ -4,7 +4,6 @@ import { ErrorMap } from '../../common/error.map';
 import { OrderRepository } from './order.repository';
 import { CommonUtil } from '../../utils/common.util';
 import { CreateOrderDto } from './dto/request/create-order.dto';
-import { UserRepository } from '../user/user.repository';
 import { ServiceRepository } from '../service/service.repository';
 import { BalanceRepository } from '../balance/balance.repository';
 import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
@@ -62,7 +61,7 @@ export class OrderService {
       );
 
       this.teleService.sendMessage(
-        `Đã tạo đơn hàng mới: ${data.id} - ${authInfo.username} - ${server.name} - ${quantity} - ${amount} - ${price}`,
+        `Đã tạo đơn hàng mới: ${createOrderDto.link} - ${authInfo.username} - ${server.name} - ${quantity} - ${amount} - ${price}`,
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
