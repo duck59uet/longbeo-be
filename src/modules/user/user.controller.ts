@@ -17,6 +17,7 @@ import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Response } from 'express';
+import { DeleteUserRequestDto } from './entities/delete-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -126,22 +127,32 @@ export class UserController {
       schema: {},
     },
   })
-  async exportUserList(
-    @Res() res: Response,
-  ) {
+  async exportUserList(@Res() res: Response) {
     try {
       const csvBuffer = await this.userService.generateCsv();
 
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader(
-        'Content-Disposition',
-        'attachment; filename=userList.csv',
-      );
+      res.setHeader('Content-Disposition', 'attachment; filename=userList.csv');
 
       res.send(csvBuffer);
     } catch (error) {
       console.error('Error exporting CSV:', error);
       res.status(500).send('An error occurred while exporting CSV');
     }
+  }
+
+  @CommonAuthPost({
+    url: URL_CONSTANTS.DELETE,
+    summary: 'Delete user',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Delete user',
+      schema: {},
+    },
+  })
+  async deteleAdmin(@Body() req: DeleteUserRequestDto) {
+    this.logger.log('========== Delete user ==========');
+    return this.userService.deleteUser(req);
   }
 }

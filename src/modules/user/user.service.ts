@@ -13,6 +13,8 @@ import { OrderRepository } from '../order/order.repository';
 import { BalanceRepository } from '../balance/balance.repository';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { unparse } from 'papaparse';
+import { DeleteUserRequestDto } from './entities/delete-user.req';
+import { UserRole } from '../../common/constants/app.constant';
 
 @Injectable()
 export class UserService {
@@ -189,4 +191,30 @@ export class UserService {
       return ResponseDto.responseError(UserService.name, error);
     }
   }
+
+  async deleteUser(req: DeleteUserRequestDto): Promise<ResponseDto<any>> {
+      try {
+        const { id } = req;
+        const userLogin = this.commonUtil.getAuthInfo();
+        if (userLogin.role === UserRole.USER) {
+          return ResponseDto.responseError(
+            UserService.name,
+            ErrorMap.PERMISSION_DENIED,
+          );
+        }
+  
+        const user = await this.userRepo.repo.findOne({ where: { id } });
+        if (!user) {
+          return ResponseDto.responseError(
+            UserService.name,
+            ErrorMap.USER_NOT_FOUND,
+          );
+        }
+  
+        await this.userRepo.repo.update({ id }, { deletedAt: new Date() });
+        return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+      } catch (error) {
+        return ResponseDto.responseError(UserRepository.name, error);
+      }
+    }
 }
