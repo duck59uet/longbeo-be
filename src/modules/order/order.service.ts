@@ -11,6 +11,7 @@ import { OrderStatus } from '../../common/constants/app.constant';
 import { unparse } from 'papaparse';
 import { ExportCsvOrderDto } from './dto/request/export-csv.req';
 import { TelegramService } from '../telegram/telegram.service';
+import { ServiceTimeRepository } from '../service_time/service_time.repository';
 
 @Injectable()
 export class OrderService {
@@ -22,24 +23,26 @@ export class OrderService {
     private serviceRepo: ServiceRepository,
     private balanceRepo: BalanceRepository,
     private teleService: TelegramService,
+    private serviceTimeRepo: ServiceTimeRepository,
   ) {
     this.logger.log('============== Constructor Order Service ==============');
   }
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<ResponseDto<any>> {
     try {
-      const { quantity, amount, service_id, service_time_id } = createOrderDto;
+      const { quantity, service } = createOrderDto;
 
       const authInfo = this.commonUtil.getAuthInfo();
       const userBalance = await this.balanceRepo.repo.findOne({
         where: { user_id: authInfo.id },
       });
 
+      const serviceTimeInfo = await this.serviceTimeRepo.repo.findOne({ where: { id: service } });
       const server = await this.serviceRepo.repo.findOne({
-        where: { id: service_id },
+        where: { id: serviceTimeInfo.serviceId },
       });
       const price = Number(
-        (Number(server.price) * Number(quantity) * Number(amount)).toFixed(2),
+        (Number(server.price) * Number(quantity) * Number(serviceTimeInfo.time)).toFixed(2),
       );
 
       if (userBalance.balance < price) {
@@ -55,13 +58,17 @@ export class OrderService {
       );
 
       const data = await this.orderRepo.createOrder(
+        Number(serviceTimeInfo.time),
+        serviceTimeInfo.serviceId,
+        serviceTimeInfo.id,
         createOrderDto,
         price,
         authInfo.id,
       );
 
       this.teleService.sendMessage(
-        `Đã tạo đơn hàng mới: ${createOrderDto.link} - ${authInfo.username} - ${server.name} - ${quantity} - ${amount} - ${price}`,
+        `Đã tạo đơn hàng mới: ${createOrderDto.link} - ${authInfo.username} - Server: ${server.name} - Số lượng: ${quantity} 
+        - Thời gian: ${serviceTimeInfo.time} - Thành tiền: ${price}`,
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
@@ -110,17 +117,6 @@ export class OrderService {
       const { startDate, endDate, categoryId } = query;
 
       const data = await this.orderRepo.exportOrderHistory(startDate, endDate, categoryId);
-
-      const csvHeaders = [
-        'Tài khoản',
-        'Link',
-        'Máy chủ',
-        'Số phút',
-        'Số mặt',
-        'Giá',
-        'Thành tiền',
-        'Thời gian'
-      ];
   
       // Dữ liệu CSV
       const csvData = data.map((record: any) => ({

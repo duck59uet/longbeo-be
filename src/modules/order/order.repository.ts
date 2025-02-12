@@ -22,18 +22,21 @@ export class OrderRepository {
   }
 
   async createOrder(
+    amount: number,
+    serviceId: number,
+    serviceTimeId: number,
     createOrderDto: CreateOrderDto,
     price: number,
     userId: string,
   ): Promise<Order> {
     const order = new Order();
     order.user_id = userId;
+    order.amount = amount;
+    order.service_id = serviceId;
+    order.service_time_id = serviceTimeId;
     order.link = createOrderDto.link;
     order.quantity = createOrderDto.quantity;
-    order.amount = createOrderDto.amount;
     order.price = price;
-    order.service_id = createOrderDto.service_id;
-    order.service_time_id = createOrderDto.service_time_id;
     order.status = OrderStatus.PENDING;
     return await this.repo.save(order);
   }

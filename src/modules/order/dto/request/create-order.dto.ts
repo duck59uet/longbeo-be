@@ -12,15 +12,7 @@ export class CreateOrderDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  amount: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  service_id: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  service_time_id: number;
+  service: number;
 
   @ApiProperty()
   @IsOptional()
