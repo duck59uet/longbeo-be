@@ -116,4 +116,15 @@ export class ServiceTimeService {
       return ResponseDto.responseError(ServiceTimeService.name, error);
     }
   }
+
+  async getAvailableTime(): Promise<ResponseDto<any>> {
+    try {
+
+      const result = await this.serviceTimeRepo.availableTime();
+
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
+    } catch (error) {
+      return ResponseDto.responseError(ServiceTimeService.name, error);
+    }
+  }
 }

@@ -100,4 +100,18 @@ export class ServiceTimeController {
   ): Promise<ResponseDto<any>> {
     return this.serviceTimeService.deleteServiceTime(req);
   }
+
+  @CommonGet({
+    url: 'getAvailableTime',
+    summary: 'Get available time',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Get available time',
+      schema: {},
+    },
+  })
+  async getAvailableTime(): Promise<ResponseDto<any>> {
+    return this.serviceTimeService.getAvailableTime();
+  }
 }
