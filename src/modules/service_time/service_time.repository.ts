@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ServiceTime } from './entities/service_time.entity';
 import { Service } from '../service/entities/service.entity';
 import { Category } from '../category/entities/category.entity';
+import { ServiceStatus } from '../../common/constants/app.constant';
 
 @Injectable()
 export class ServiceTimeRepository {
@@ -61,6 +62,7 @@ export class ServiceTimeRepository {
       .innerJoin(Category, 'category', 'category.id = service.categoryId')
       .where('service_time.deletedAt IS NULL')
       .andWhere('service.deletedAt IS NULL')
+      .andWhere('service.status = :status', { status: ServiceStatus.ACTIVE })
       .andWhere('category.deletedAt IS NULL')
       .select([
         'service_time.id as id',
