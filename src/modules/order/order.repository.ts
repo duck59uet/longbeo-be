@@ -117,11 +117,7 @@ export class OrderRepository {
     return [count, item];
   }
 
-  async exportOrderHistory(
-    startDate: Date,
-    endDate: Date,
-    categoryId: number,
-  ) {
+  async exportOrderHistory(startDate: Date, endDate: Date, categoryId: number) {
     const sql = this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
@@ -142,6 +138,23 @@ export class OrderRepository {
         'service.price as "servicePrice"',
       ]);
 
+    return sql.execute();
+  }
+
+  async getUserOrderById(id: string, userId: string) {
+    const sql = this.repo
+      .createQueryBuilder('order')
+      .where('order.id = :id', { id })
+      .andWhere('order.user_id = :userId', { userId })
+      .select([
+        'order.id',
+        'order.quantity',
+        'order.amount',
+        'order.price',
+        'order.createdAt',
+        'order.link',
+        'order.note',
+      ]);
     return sql.execute();
   }
 }

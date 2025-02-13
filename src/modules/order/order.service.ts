@@ -139,4 +139,16 @@ export class OrderService {
       return ResponseDto.responseError(OrderService.name, error);
     }
   }
+
+  async getUserOrderById(id: string): Promise<ResponseDto<any>> {
+    try {
+      const authInfo = this.commonUtil.getAuthInfo();
+      const userId = authInfo.id;
+
+      const data = await this.orderRepo.getUserOrderById(id, userId);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
+    } catch (error) {
+      return ResponseDto.responseError(OrderService.name, error);
+    }
+  }
 }
