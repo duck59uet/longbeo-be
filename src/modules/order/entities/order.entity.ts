@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntityAutoId } from '../../../common/entities';
+import { BaseEntityIncreNumberId } from '../../../common/entities';
 import { OrderStatus } from '../../../common/constants/app.constant';
 
 @Entity({ name: 'orders' })
-export class Order extends BaseEntityAutoId {
+export class Order extends BaseEntityIncreNumberId {
   @Column({ nullable: false, type: 'uuid' })
   user_id: string;
 
