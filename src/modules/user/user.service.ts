@@ -30,13 +30,15 @@ export class UserService {
     this.logger.log('============== Constructor User Service ==============');
   }
 
-  async getUserInfo(): Promise<ResponseDto<User>> {
+  async getUserInfo(): Promise<ResponseDto<any>> {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
       const user = await this.userRepo.repo.findOne({
         where: { id: authInfo.id },
       });
-      return ResponseDto.response(ErrorMap.SUCCESSFUL, user);
+      //Loại bỏ trường password
+      const { password, ...result } = user;
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, result);
     } catch (error) {
       return ResponseDto.responseError(UserService.name, error);
     }

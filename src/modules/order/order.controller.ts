@@ -113,4 +113,19 @@ export class OrderController {
       res.status(500).send('An error occurred while exporting CSV');
     }
   }
+
+  @CommonAuthGet({
+    url: 'user/:id',
+    summary: 'user get order by id',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'user get order by id',
+      schema: {},
+    },
+  })
+  async getUserOrderById(@Param('id') id: string) {
+    this.logger.log('========== Get user order by id ==========');
+    return this.orderService.getUserOrderById(id);
+  }
 }

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceTime } from './entities/service_time.entity';
 import { Service } from '../service/entities/service.entity';
+import { Category } from '../category/entities/category.entity';
+import { ServiceStatus } from '../../common/constants/app.constant';
 
 @Injectable()
 export class ServiceTimeRepository {
@@ -17,7 +19,12 @@ export class ServiceTimeRepository {
     );
   }
 
-  async getServiceTimes(categoryId: number, limit: number, page: number, serviceId?: number) {
+  async getServiceTimes(
+    categoryId: number,
+    limit: number,
+    page: number,
+    serviceId?: number,
+  ) {
     const sql = this.repo
       .createQueryBuilder('service_time')
       .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
@@ -36,7 +43,7 @@ export class ServiceTimeRepository {
     if (serviceId) {
       sql.andWhere('service_time.serviceId = :serviceId', { serviceId });
     }
-    
+
     const [count, item] = await Promise.all([
       sql.getCount(),
       sql
@@ -46,5 +53,24 @@ export class ServiceTimeRepository {
     ]);
 
     return [count, item];
+  }
+
+  async availableTime() {
+    const sql = this.repo
+      .createQueryBuilder('service_time')
+      .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
+      .innerJoin(Category, 'category', 'category.id = service.categoryId')
+      .where('service_time.deletedAt IS NULL')
+      .andWhere('service.deletedAt IS NULL')
+      .andWhere('service.status = :status', { status: ServiceStatus.ACTIVE })
+      .andWhere('category.deletedAt IS NULL')
+      .select([
+        'service_time.id as id',
+        'service_time.time as time',
+        'service.name as "serviceName"',
+        'service.price as "price"',
+        'category.name as "categoryName"',
+      ]);
+    return sql.execute();
   }
 }
