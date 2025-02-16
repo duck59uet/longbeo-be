@@ -79,7 +79,7 @@ export class OrderController {
     },
   })
   @Roles(UserRole.ADMIN)
-  async adminUpdateOrderStatus(@Param('id') id: string) {
+  async adminUpdateOrderStatus(@Param('id') id: number) {
     this.logger.log('========== Admin update order status ==========');
     return this.orderService.adminUpdateOrder(id);
   }

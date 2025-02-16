@@ -100,7 +100,7 @@ export class OrderService {
     }
   }
 
-  async adminUpdateOrder(id: string): Promise<ResponseDto<any>> {
+  async adminUpdateOrder(id: number): Promise<ResponseDto<any>> {
     try {
       await this.orderRepo.repo.update(
         { id },
