@@ -153,6 +153,7 @@ export class OrderRepository {
         'order.price',
         'order.createdAt',
         'order.link',
+        'order.status',
         'order.note',
       ]);
     return sql.execute();
