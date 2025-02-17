@@ -29,8 +29,8 @@ export class User extends BaseEntityAutoId {
   @Column({ nullable: true })
   jwtToken: string;
 
-  @Column({ nullable: true })
-  level: string;
+  @Column({ nullable: true, default: 1 })
+  level: number;
 
   @Exclude()
   @Column({ nullable: true })

@@ -15,6 +15,7 @@ import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { unparse } from 'papaparse';
 import { DeleteUserRequestDto } from './entities/delete-user.req';
 import { UserRole } from '../../common/constants/app.constant';
+import { GetUserPathParamDto } from './dto/request/get-user.req';
 
 @Injectable()
 export class UserService {
@@ -177,7 +178,7 @@ export class UserService {
       const csvData = data.map((record: any) => ({
         'Tên tài khoản': record.username,
         'Tên đầy chủ': record.fullname,
-        'Email': record.email,
+        Email: record.email,
         'Số điện thoại': record.phone,
         'Số dư': record.balance,
         'Tài khoản giới thiệu': record.refername,
@@ -195,28 +196,54 @@ export class UserService {
   }
 
   async deleteUser(req: DeleteUserRequestDto): Promise<ResponseDto<any>> {
-      try {
-        const { id } = req;
-        const userLogin = this.commonUtil.getAuthInfo();
-        if (userLogin.role === UserRole.USER) {
-          return ResponseDto.responseError(
-            UserService.name,
-            ErrorMap.PERMISSION_DENIED,
-          );
-        }
-  
-        const user = await this.userRepo.repo.findOne({ where: { id } });
-        if (!user) {
-          return ResponseDto.responseError(
-            UserService.name,
-            ErrorMap.USER_NOT_FOUND,
-          );
-        }
-  
-        await this.userRepo.repo.update({ id }, { deletedAt: new Date() });
-        return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
-      } catch (error) {
-        return ResponseDto.responseError(UserRepository.name, error);
+    try {
+      const { id } = req;
+      const userLogin = this.commonUtil.getAuthInfo();
+      if (userLogin.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
       }
+
+      const user = await this.userRepo.repo.findOne({ where: { id } });
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      await this.userRepo.repo.update({ id }, { deletedAt: new Date() });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+    } catch (error) {
+      return ResponseDto.responseError(UserRepository.name, error);
     }
+  }
+
+  async updateUserLevel(req: GetUserPathParamDto): Promise<ResponseDto<any>> {
+    try {
+      const { id, level } = req;
+      const userLogin = this.commonUtil.getAuthInfo();
+      if (userLogin.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
+
+      const user = await this.userRepo.repo.findOne({ where: { id } });
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      await this.userRepo.repo.update({ id }, { level });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+    } catch (error) {
+      return ResponseDto.responseError(UserRepository.name, error);
+    }
+  }
 }

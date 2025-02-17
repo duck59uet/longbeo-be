@@ -1,3 +1,5 @@
+import { Code } from "typeorm";
+
 export const ErrorMap = {
   SUCCESSFUL: {
     Code: 'SUCCESSFUL',
@@ -46,6 +48,10 @@ export const ErrorMap = {
   PERMISSION_DENIED: {
     Code: 'E006',
     Message: 'Permission denied',
+  },
+  USER_LEVEL_NOT_FOUND: {
+    Code: 'E007',
+    Message: 'User level not found',
   },
   E500: {
     Code: 'E500',

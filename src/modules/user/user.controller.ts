@@ -18,6 +18,7 @@ import { ChangePasswordDto } from './dto/request/change-password';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Response } from 'express';
 import { DeleteUserRequestDto } from './entities/delete-user.req';
+import { GetUserPathParamDto } from './dto/request/get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -154,5 +155,20 @@ export class UserController {
   async deteleAdmin(@Body() req: DeleteUserRequestDto) {
     this.logger.log('========== Delete user ==========');
     return this.userService.deleteUser(req);
+  }
+
+  @CommonAuthPost({
+    url: URL_CONSTANTS.UPDATE_USER_LEVEL,
+    summary: 'Update user level',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Update user level',
+      schema: {},
+    },
+  })
+  async updateUserLevel(@Body() req: GetUserPathParamDto) {
+    this.logger.log('========== Update user level ==========');
+    return this.userService.updateUserLevel(req);
   }
 }

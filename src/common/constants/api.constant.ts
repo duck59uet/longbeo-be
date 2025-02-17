@@ -24,4 +24,5 @@ export const URL_CONSTANTS = {
   UPLOAD_GCP: 'image/gcp',
   ORDER_HISTORY: 'history',
   USER_ORDER_HISTORY: 'user/history/:address',
+  UPDATE_USER_LEVEL: 'update-level',
 };

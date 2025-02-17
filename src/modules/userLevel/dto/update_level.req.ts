@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetUserPathParamDto {
+export class UpdateUserLevelDto {
   @ApiProperty({
     description: 'id',
-    type: String,
   })
-  id: string;
+  id: number;
 
   @ApiProperty({
-    description: 'Level',
+    description: 'discount',
   })
-  level: number;
+  discount: number;
 }

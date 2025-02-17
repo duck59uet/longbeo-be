@@ -7,6 +7,7 @@ import { UserRepository } from './user.repository';
 import { TopupModule } from '../topup/topup.module';
 import { OrderModule } from '../order/order.module';
 import { BalanceModule } from '../balance/balance.module';
+import { UserLevelModule } from '../userLevel/userLevel.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BalanceModule } from '../balance/balance.module';
     forwardRef(() => TopupModule),
     forwardRef(() => OrderModule),
     forwardRef(() => BalanceModule),
+    forwardRef(() => UserLevelModule),
   ],
   controllers: [UserController],
   providers: [UserService,  UserRepository],
