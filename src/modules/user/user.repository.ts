@@ -88,6 +88,7 @@ export class UserRepository {
         'user.username',
         'user.fullname',
         'user.email',
+        'user.level',
         'user.phone',
         'user.role',
         'user.referUser',
