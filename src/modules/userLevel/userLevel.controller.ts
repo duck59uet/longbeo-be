@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { UserLevelService } from './userLevel.service';
@@ -38,7 +38,7 @@ export class UserLevelController {
       schema: {},
     },
   })
-  async updateUserLevel(req: UpdateUserLevelDto) {
+  async updateUserLevel(@Body() req: UpdateUserLevelDto) {
     this.logger.log('========== Update user level ==========');
     return this.userLevelService.updateUserLevel(req);
   }
