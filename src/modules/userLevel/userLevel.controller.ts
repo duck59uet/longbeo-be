@@ -29,7 +29,7 @@ export class UserLevelController {
   }
 
   @CommonAuthPost({
-    url: '/update/:id',
+    url: '/update',
     summary: 'Update user level',
     apiOkResponseOptions: {
       status: 200,
