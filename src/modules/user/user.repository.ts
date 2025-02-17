@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Balance } from '../balance/entities/balance.entity';
 import { UserRole } from '../../common/constants/app.constant';
+import { UserLevel } from '../userLevel/entities/userLevel.entity';
 
 @Injectable()
 export class UserRepository {
@@ -82,6 +83,7 @@ export class UserRepository {
     const sql = this.repo
       .createQueryBuilder('user')
       .leftJoin(Balance, 'balance', 'balance.user_id = user.id')
+      .leftJoin(UserLevel, 'userLevel', 'userLevel.id = user.level')
       .where('user.role = :role', { role: UserRole.USER })
       .select([
         'user.id',
@@ -93,6 +95,7 @@ export class UserRepository {
         'user.role',
         'user.referUser',
         'balance.balance',
+        'userLevel.name as levelName',
       ]);
 
     if (req.username) {
