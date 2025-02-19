@@ -12,6 +12,8 @@ import { unparse } from 'papaparse';
 import { ExportCsvOrderDto } from './dto/request/export-csv.req';
 import { TelegramService } from '../telegram/telegram.service';
 import { ServiceTimeRepository } from '../service_time/service_time.repository';
+import { UserRepository } from '../user/user.repository';
+import { UserLevelRepository } from '../userLevel/userLevel.repository';
 
 @Injectable()
 export class OrderService {
@@ -23,6 +25,8 @@ export class OrderService {
     private serviceRepo: ServiceRepository,
     private balanceRepo: BalanceRepository,
     private teleService: TelegramService,
+    private userLevelRepo: UserLevelRepository,
+    private userRepo: UserRepository,
     private serviceTimeRepo: ServiceTimeRepository,
   ) {
     this.logger.log('============== Constructor Order Service ==============');
@@ -45,6 +49,13 @@ export class OrderService {
         (Number(server.price) * Number(quantity) * Number(serviceTimeInfo.time)).toFixed(2),
       );
 
+      let userLevel: any;
+      //Lay ra discount
+      const userInfo = await this.userRepo.repo.findOne({ where: { id: authInfo.id } });
+      if (userInfo.level !== 1) {
+        userLevel = await this.userLevelRepo.repo.findOne({ where: { id: userInfo.level } });
+      }
+
       if (userBalance.balance < price) {
         return ResponseDto.responseError(
           OrderService.name,
@@ -52,9 +63,14 @@ export class OrderService {
         );
       }
 
+      let discount = 0;
+      if (userLevel) {
+        discount = parseFloat((userLevel.discount * price / 100).toFixed(2));
+      }
+
       await this.balanceRepo.repo.update(
         { user_id: authInfo.id },
-        { balance: userBalance.balance - price },
+        { balance: userBalance.balance - price - discount },
       );
 
       const data = await this.orderRepo.createOrder(
@@ -64,6 +80,7 @@ export class OrderService {
         createOrderDto,
         price,
         authInfo.id,
+        discount,
       );
 
       this.teleService.sendMessage(
@@ -127,6 +144,7 @@ export class OrderService {
         'Số mặt': record.quantity,
         'Giá': record.servicePrice,
         'Thành tiền': record.price,
+        'Giảm giá': record.discount,
         'Thời gian': record.createdAt,
       }));
   

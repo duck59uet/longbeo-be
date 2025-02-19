@@ -28,6 +28,7 @@ export class OrderRepository {
     createOrderDto: CreateOrderDto,
     price: number,
     userId: string,
+    discount: number,
   ): Promise<Order> {
     const order = new Order();
     order.user_id = userId;
@@ -37,6 +38,7 @@ export class OrderRepository {
     order.link = createOrderDto.link;
     order.quantity = createOrderDto.quantity;
     order.price = price;
+    order.discount = discount;
     order.status = OrderStatus.PENDING;
     return await this.repo.save(order);
   }
@@ -54,6 +56,7 @@ export class OrderRepository {
         'order.quantity',
         'order.amount',
         'order.price',
+        'order.discount',
         'order.createdAt',
         'order.link',
         'order.note',
@@ -95,6 +98,7 @@ export class OrderRepository {
         'order.quantity',
         'order.amount',
         'order.price',
+        'order.discount',
         'order.createdAt',
         'order.link',
         'order.status',
@@ -129,6 +133,7 @@ export class OrderRepository {
         'order.quantity as quantity',
         'order.amount as amount',
         'order.price as price',
+        'order.discount as discount',
         'order.createdAt as "createdAt"',
         'order.link as link',
         'order.status',

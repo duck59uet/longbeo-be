@@ -19,6 +19,9 @@ export class Order extends BaseEntityIncreNumberId {
   @Column({ nullable: false })
   price: number;
 
+  @Column({ nullable: false, default: 0 })
+  discount: number;
+
   @Column({ nullable: false })
   service_id: number;
 
