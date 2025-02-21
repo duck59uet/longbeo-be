@@ -146,6 +146,7 @@ export class OrderService {
         'Thành tiền': record.price,
         'Giảm giá': record.discount,
         'Thời gian': record.createdAt,
+        'Trạng thái': record.status,
       }));
   
       // Tạo CSV string với BOM (UTF-8)
