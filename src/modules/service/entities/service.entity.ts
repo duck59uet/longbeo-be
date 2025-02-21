@@ -7,8 +7,14 @@ export class Service extends BaseEntityIncreNumberId {
   @Column({ nullable: false })
   name: string;
 
+  @Column({ nullable: true })
+  enName: string;
+
   @Column({ nullable: false, type: 'float' })
   price: number;
+
+  @Column({ nullable: true, type: 'float', default: 0 })
+  enPrice: number;
 
   @Column({ nullable: false })
   categoryId: number;

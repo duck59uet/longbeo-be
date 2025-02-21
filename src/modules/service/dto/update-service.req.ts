@@ -7,10 +7,21 @@ export class UpdateServiceDto {
   name: string;
 
   @ApiProperty({
+    description: 'Service En Name',
+  })
+  enName: string;
+
+  @ApiProperty({
     description: 'Price',
     type: 'double',
   })
   price: number;
+
+  @ApiProperty({
+    description: 'En Price',
+    type: 'double',
+  })
+  enPrice: number;
 
   @ApiProperty({
     description: 'Source Address',
