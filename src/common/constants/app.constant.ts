@@ -11,8 +11,10 @@ export enum OrderType {
 
 export enum OrderStatus {
   PENDING = 'Pending',
-  COMPLETE = 'Complete',
-  REJECT = 'Reject',
+  IN_PROGRESS = 'In Progress',
+  PARTIAL = 'Partial',
+  COMPLETED = 'Completed',
+  CANCELED = 'Canceled',
 }
 
 export enum PaymentMethod {

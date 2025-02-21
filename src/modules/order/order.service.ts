@@ -121,7 +121,7 @@ export class OrderService {
     try {
       await this.orderRepo.repo.update(
         { id },
-        { status: OrderStatus.COMPLETE },
+        { status: OrderStatus.COMPLETED },
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
     } catch (error) {

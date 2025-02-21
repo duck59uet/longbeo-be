@@ -3,7 +3,7 @@
 import { Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { IsNull } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import axios from 'axios';
 import { OrderRepository } from './order.repository';
 import { OrderStatus } from '../../common/constants/app.constant';
@@ -18,7 +18,7 @@ export class OrderProcessor {
   constructor(
     private orderRepo: OrderRepository,
     private readonly serviceRepo: ServiceRepository,
-    private readonly serviceTimeRepo: ServiceTimeRepository
+    private readonly serviceTimeRepo: ServiceTimeRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_10_SECONDS)
@@ -29,10 +29,11 @@ export class OrderProcessor {
       const orders = await this.orderRepo.repo.find({
         where: {
           status: OrderStatus.PENDING,
+          source_order_id: IsNull(),
         },
       });
       if (!orders) {
-        this.logger.log(`There is no active orders`);
+        this.logger.log(`There is no pending orders`);
       }
       const processBuffView = async (order: Order) => {
         try {
@@ -42,7 +43,9 @@ export class OrderProcessor {
               where: { id: order.service_id },
             });
 
-            const serviceTime = await this.serviceTimeRepo.repo.findOne({ where: { id: order.service_time_id } });
+            const serviceTime = await this.serviceTimeRepo.repo.findOne({
+              where: { id: order.service_time_id },
+            });
 
             if (service) {
               const buffView = Math.floor(
@@ -65,14 +68,15 @@ export class OrderProcessor {
                 if (result.status === 200) {
                   await this.orderRepo.repo.update(
                     { id: order.id },
-                    { status: OrderStatus.COMPLETE, actual_quantity: buffView, source_order_id: result.data.order },
+                    {
+                      actual_quantity: buffView,
+                      source_order_id: result.data.order,
+                    },
                   );
-                } 
-
+                }
               } catch (error) {
                 console.log(error);
               }
-              
             }
           } catch (error) {
             this.logger.error('POST request failed:', error);
@@ -84,6 +88,73 @@ export class OrderProcessor {
 
       for (const order of orders) {
         await processBuffView(order);
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  async handlePendingCron(): Promise<void> {
+    this.logger.log(`Check buff order`);
+
+    try {
+      const orders = await this.orderRepo.repo.find({
+        where: {
+          status: OrderStatus.PENDING,
+          source_order_id: Not(IsNull()),
+        },
+      });
+      if (!orders) {
+        this.logger.log(`There is no active orders`);
+      }
+      const processCheckOrder = async (order: Order) => {
+        try {
+          this.logger.log(`Create buff view for ${order.link}`);
+          try {
+            const service = await this.serviceRepo.repo.findOne({
+              where: { id: order.service_id },
+            });
+
+            if (service) {
+              try {
+                const result = await axios.post(
+                  service.sourceAddress,
+                  JSON.stringify({
+                    key: service.apiKey,
+                    action: 'status',
+                    order: order.source_order_id,
+                  }),
+                  { headers: { 'Content-Type': 'application/json' } },
+                );
+
+                if (result.status === 200) {
+                  if (result.data.status === OrderStatus.IN_PROGRESS) {
+                    await this.orderRepo.repo.update(
+                      { id: order.id },
+                      { status: OrderStatus.IN_PROGRESS },
+                    );
+                  } else if (result.data.status === OrderStatus.COMPLETED) {
+                    await this.orderRepo.repo.update(
+                      { id: order.id },
+                      { status: OrderStatus.COMPLETED },
+                    );
+                  }
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          } catch (error) {
+            this.logger.error('POST request failed:', error);
+          }
+        } catch (error) {
+          this.logger.error(error);
+        }
+      };
+
+      for (const order of orders) {
+        await processCheckOrder(order);
       }
     } catch (error) {
       this.logger.error(error);
