@@ -7,6 +7,8 @@ import { Service } from '../service/entities/service.entity';
 import { OrderStatus } from '../../common/constants/app.constant';
 import { User } from '../user/entities/user.entity';
 import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
+import { GetOrderRequestDto } from './dto/request/get-order.req';
+import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class OrderRepository {
@@ -110,6 +112,47 @@ export class OrderRepository {
         'service.name',
         'service.price',
       ]);
+
+    const [count, item] = await Promise.all([
+      sql.getCount(),
+      sql
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .execute(),
+    ]);
+
+    return [count, item];
+  }
+
+  async adminGetOrderFull(query: GetOrderRequestDto) {
+    const { search, page, limit } = query;
+    const sql = this.repo
+      .createQueryBuilder('order')
+      .innerJoin(Service, 'service', 'service.id = order.service_id')
+      .innerJoin(Category, 'category', 'category.id = service.categoryId')
+      .innerJoin(User, 'user', 'user.id = order.user_id')
+      .orderBy('order.createdAt', 'DESC')
+      .select([
+        'order.id as id',
+        'order.quantity as quantity',
+        'order.amount as amount',
+        'order.price as price',
+        'order.discount as discount',
+        'order.createdAt as "createdAt"',
+        'order.link as link',
+        'order.status as status',
+        'order.note as note',
+        'user.id as userId',
+        'user.username as username',
+        'user.fullname as fullname',
+        'service.name as "serviceName"',
+        'service.price as "servicePrice"',
+        'category.name as "categoryName"',
+      ]);
+    
+    if(search) {
+      sql.andWhere('order.link ilike :search or user.username ilike :search OR user.fullname ilike :search OR service.name ilike :search', { search: `%${search}%` });
+    }
 
     const [count, item] = await Promise.all([
       sql.getCount(),

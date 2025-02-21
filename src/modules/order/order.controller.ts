@@ -14,6 +14,7 @@ import { AdminGetOrderRequestDto } from './dto/request/admin-get-order.dto';
 import { UserRole } from '../../common/constants/app.constant';
 import { ExportCsvOrderDto } from './dto/request/export-csv.req';
 import { Response } from 'express';
+import { GetOrderRequestDto } from './dto/request/get-order.req';
 
 @Controller(CONTROLLER_CONSTANTS.ORDER)
 @ApiTags(CONTROLLER_CONSTANTS.ORDER)
@@ -66,6 +67,22 @@ export class OrderController {
   async adminGetOrder(@Query() query: AdminGetOrderRequestDto) {
     this.logger.log('========== Admin get order ==========');
     return this.orderService.adminGetOrder(query);
+  }
+
+  @CommonAuthGet({
+    url: 'admin/getOrder',
+    summary: 'admin get order',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'admin get order',
+      schema: {},
+    },
+  })
+  // @Roles(UserRole.ADMIN)
+  async adminGetOrderFull(@Query() query: GetOrderRequestDto) {
+    this.logger.log('========== Admin get order full ==========');
+    return this.orderService.adminGetOrderFull(query);
   }
 
   @CommonAuthPut({

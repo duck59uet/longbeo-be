@@ -14,6 +14,7 @@ import { TelegramService } from '../telegram/telegram.service';
 import { ServiceTimeRepository } from '../service_time/service_time.repository';
 import { UserRepository } from '../user/user.repository';
 import { UserLevelRepository } from '../userLevel/userLevel.repository';
+import { GetOrderRequestDto } from './dto/request/get-order.req';
 
 @Injectable()
 export class OrderService {
@@ -124,6 +125,15 @@ export class OrderService {
         { status: OrderStatus.COMPLETED },
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+    } catch (error) {
+      return ResponseDto.responseError(OrderService.name, error);
+    }
+  }
+
+  async adminGetOrderFull(query: GetOrderRequestDto): Promise<ResponseDto<any>> {
+    try {
+      const data = await this.orderRepo.adminGetOrderFull(query);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {
       return ResponseDto.responseError(OrderService.name, error);
     }
