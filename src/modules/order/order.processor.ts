@@ -94,7 +94,7 @@ export class OrderProcessor {
     }
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async handlePendingCron(): Promise<void> {
     this.logger.log(`Check buff order`);
 
