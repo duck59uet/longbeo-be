@@ -22,9 +22,9 @@ export class AuthController {
     summary: 'Send signature to create access token',
   })
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDTO: LoginDTO): Promise<{ token: string }> {
+  async login(@Body() loginDTO: LoginDTO): Promise<any> {
     const token = await this.authService.userLogin(loginDTO);
-    return { token };
+    return token;
   }
 
   @Post('admin/login')

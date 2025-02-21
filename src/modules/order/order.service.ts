@@ -85,7 +85,7 @@ export class OrderService {
 
       this.teleService.sendMessage(
         `Đã tạo đơn hàng mới: ${createOrderDto.link} - ${authInfo.username} - Server: ${server.name} - Số lượng: ${quantity} 
-        - Thời gian: ${serviceTimeInfo.time} - Thành tiền: ${price}`,
+        - Thời gian: ${serviceTimeInfo.time} - Thành tiền: ${price} - Giảm giá: ${discount} - Tổng tiền: ${price - discount}`,
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
     } catch (error) {

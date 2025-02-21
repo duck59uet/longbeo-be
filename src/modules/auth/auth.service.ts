@@ -13,7 +13,7 @@ export class AuthService {
     private adminRepo: AdminRepository,
   ) {}
 
-  async userLogin(loginDTO: LoginDTO): Promise<string> {
+  async userLogin(loginDTO: LoginDTO): Promise<any> {
     let { username, password } = loginDTO;
 
     const verifyUser = await this.userRepo.verifyUser(username, password);
@@ -23,12 +23,16 @@ export class AuthService {
     }
 
     const user = await this.userRepo.repo.findOne({ where: { username } });
+    // Tôi cần bỏ trường password khi trả về response
+    delete user.password;
 
-    return await this.jwtService.signAsync({
+    const token = await this.jwtService.signAsync({
       id: user.id,
       role: user.role,
       username: user.username
     });
+
+    return { token, user };
   }
 
   async adminLogin(loginDTO: LoginDTO): Promise<string> {
