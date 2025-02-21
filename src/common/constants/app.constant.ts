@@ -11,7 +11,7 @@ export enum OrderType {
 
 export enum OrderStatus {
   PENDING = 'Pending',
-  IN_PROGRESS = 'In Progress',
+  IN_PROGRESS = 'In progress',
   PARTIAL = 'Partial',
   COMPLETED = 'Completed',
   CANCELED = 'Canceled',

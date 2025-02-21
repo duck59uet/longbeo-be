@@ -3,7 +3,7 @@
 import { Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { IsNull, Not } from 'typeorm';
+import { In, IsNull, Not } from 'typeorm';
 import axios from 'axios';
 import { OrderRepository } from './order.repository';
 import { OrderStatus } from '../../common/constants/app.constant';
@@ -94,14 +94,14 @@ export class OrderProcessor {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handlePendingCron(): Promise<void> {
     this.logger.log(`Check buff order`);
 
     try {
       const orders = await this.orderRepo.repo.find({
         where: {
-          status: OrderStatus.PENDING,
+          status: In([OrderStatus.PENDING, OrderStatus.IN_PROGRESS]),
           source_order_id: Not(IsNull()),
         },
       });
