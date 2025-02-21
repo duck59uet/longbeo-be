@@ -151,7 +151,7 @@ export class OrderRepository {
       ]);
     
     if(search) {
-      sql.andWhere('order.link ilike :search or user.username ilike :search OR user.fullname ilike :search OR service.name ilike :search', { search: `%${search}%` });
+      sql.andWhere('order.id = :search', { search: search });
     }
 
     const [count, item] = await Promise.all([
