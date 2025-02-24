@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Response } from 'express';
-import { DeleteUserRequestDto } from './entities/delete-user.req';
+import { DeleteUserRequestDto } from './dto/request/delete-user.req';
 import { GetUserPathParamDto } from './dto/request/get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
