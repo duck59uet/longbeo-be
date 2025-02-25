@@ -251,13 +251,6 @@ export class UserService {
     try {
       const authInfo = this.commonUtil.getAuthInfo();
       const { id } = authInfo;
-      const userLogin = this.commonUtil.getAuthInfo();
-      if (userLogin.role === UserRole.USER) {
-        return ResponseDto.responseError(
-          UserService.name,
-          ErrorMap.PERMISSION_DENIED,
-        );
-      }
 
       const user = await this.userRepo.repo.findOne({ where: { id } });
       if (!user) {
