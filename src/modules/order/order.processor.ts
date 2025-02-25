@@ -66,6 +66,13 @@ export class OrderProcessor {
                 );
 
                 if (result.status === 200) {
+                  if (JSON.stringify(result.data).includes('error')) {
+                    await this.orderRepo.repo.update(
+                      { id: order.id },
+                      { status: OrderStatus.CANCELED },
+                    );
+                    return;
+                  }
                   await this.orderRepo.repo.update(
                     { id: order.id },
                     {
