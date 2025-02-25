@@ -73,6 +73,11 @@ export class OrderProcessor {
                       source_order_id: result.data.order,
                     },
                   );
+                } else {
+                  await this.orderRepo.repo.update(
+                    { id: order.id },
+                    { status: OrderStatus.CANCELED },
+                  );
                 }
               } catch (error) {
                 console.log(error);
