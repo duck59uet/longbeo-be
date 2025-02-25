@@ -182,8 +182,8 @@ export class UserController {
       schema: {},
     },
   })
-  async generateApiKey(@Body() req: UserIdRequestDto) {
+  async generateApiKey() {
     this.logger.log('========== Generate API key ==========');
-    return this.userService.generateApiKey(req);
+    return this.userService.generateApiKey();
   }
 }

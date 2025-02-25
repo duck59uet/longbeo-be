@@ -27,7 +27,7 @@ export class CustomConfigService {
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_DATABASE'),
       migrationsRun: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       // namingStrategy: new PascalCaseStrategy(),
       autoLoadEntities: true,

@@ -247,9 +247,10 @@ export class UserService {
     }
   }
 
-  async generateApiKey(req: UserIdRequestDto): Promise<ResponseDto<any>> {
+  async generateApiKey(): Promise<ResponseDto<any>> {
     try {
-      const { id } = req;
+      const authInfo = this.commonUtil.getAuthInfo();
+      const { id } = authInfo;
       const userLogin = this.commonUtil.getAuthInfo();
       if (userLogin.role === UserRole.USER) {
         return ResponseDto.responseError(
