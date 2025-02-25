@@ -21,7 +21,7 @@ export class OrderProcessor {
     private readonly serviceTimeRepo: ServiceTimeRepository,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handleCron(): Promise<void> {
     this.logger.log(`Run buff order`);
 
