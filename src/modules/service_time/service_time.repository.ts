@@ -85,8 +85,8 @@ export class ServiceTimeRepository {
       .select([
         'service_time.id as id',
         'service_time.time as time',
-        'service.name as "serviceName"',
-        'service.price as "rate"',
+        'service.enName as "name"',
+        'service.enPrice as "rate"',
         'category.name as "category"',
       ]);
     return sql.execute();
