@@ -260,7 +260,7 @@ export class UserService {
         );
       }
 
-      const saltRounds = 10;
+      const saltRounds = 1;
       const apiKey = await bcrypt.hash(user.username, saltRounds);
       await this.userRepo.repo.update({ id }, { apiKey });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, { apiKey });
