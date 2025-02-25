@@ -35,12 +35,12 @@ export class ApiService {
         return { error: 'Invalid API key' };
       }
 
-      if (action === 'add') {
+      if (action === 'services') {
         const services = await this.serviceTimeRepo.getServices();
         return { services };
       }
 
-      if (action === 'service') {
+      if (action === 'add') {
         if (!service || !link || !quantity) {
           return { error: 'Invalid parameters' };
         }
