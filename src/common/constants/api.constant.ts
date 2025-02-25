@@ -9,6 +9,7 @@ export const CONTROLLER_CONSTANTS = {
   SERVICE_TIME: 'service_time', 
   CATEGORY: 'category',
   USER_LEVEL: 'user_level',
+  V2: 'api/v2',
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',

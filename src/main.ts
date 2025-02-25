@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,6 +11,12 @@ import { SharedModule } from './shared/shared.module';
 // eslint-disable-next-line no-void
 void (async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Tạo version
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       forbidUnknownValues: false,
@@ -29,8 +35,8 @@ void (async function bootstrap() {
 
   // setup swagger
   const config = new DocumentBuilder()
-    .setTitle('zcoin API')
-    .setVersion('v1')
+    .setTitle('dichvumat API')
+    .setVersion('v1 & v2')
     .addServer('/')
     .addServer(configService.get<string>('SWAGGER_PATH'))
     .addBearerAuth()
@@ -40,6 +46,7 @@ void (async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   app.use(swaggerStats.getMiddleware({ swaggerSpec: document }));
   SwaggerModule.setup('documentation', app, document);
+  
 
   await app.listen(3000);
 })();
