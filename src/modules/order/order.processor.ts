@@ -139,6 +139,11 @@ export class OrderProcessor {
                       { id: order.id },
                       { status: OrderStatus.COMPLETED },
                     );
+                  } else if (result.data.status === OrderStatus.CANCELED) {
+                    await this.orderRepo.repo.update(
+                      { id: order.id },
+                      { status: OrderStatus.CANCELED },
+                    );
                   }
                 }
               } catch (error) {
