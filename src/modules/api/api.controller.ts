@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CONTROLLER_CONSTANTS,
@@ -8,6 +8,7 @@ import {
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { ApiService } from './api.service';
+import { ApiDto } from './dto/api.req';
 
 @Controller(CONTROLLER_CONSTANTS.V2)
 @ApiTags(CONTROLLER_CONSTANTS.V2)
@@ -26,8 +27,8 @@ export class ApiController {
       schema: {},
     },
   })
-  async getUserInfo() {
+  async getUserInfo(@Body() body: ApiDto) {
     this.logger.log('========== API v2 ==========');
-    return this.apiService.apiForSale();
+    return this.apiService.apiForSale(body);
   }
 }

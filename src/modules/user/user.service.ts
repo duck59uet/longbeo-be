@@ -13,7 +13,7 @@ import { OrderRepository } from '../order/order.repository';
 import { BalanceRepository } from '../balance/balance.repository';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { unparse } from 'papaparse';
-import { DeleteUserRequestDto } from './dto/request/delete-user.req';
+import { UserIdRequestDto } from './dto/request/user-id.req';
 import { UserRole } from '../../common/constants/app.constant';
 import { GetUserPathParamDto } from './dto/request/get-user.req';
 
@@ -195,7 +195,7 @@ export class UserService {
     }
   }
 
-  async deleteUser(req: DeleteUserRequestDto): Promise<ResponseDto<any>> {
+  async deleteUser(req: UserIdRequestDto): Promise<ResponseDto<any>> {
     try {
       const { id } = req;
       const userLogin = this.commonUtil.getAuthInfo();
@@ -242,6 +242,34 @@ export class UserService {
 
       await this.userRepo.repo.update({ id }, { level });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, {});
+    } catch (error) {
+      return ResponseDto.responseError(UserRepository.name, error);
+    }
+  }
+
+  async generateApiKey(req: UserIdRequestDto): Promise<ResponseDto<any>> {
+    try {
+      const { id } = req;
+      const userLogin = this.commonUtil.getAuthInfo();
+      if (userLogin.role === UserRole.USER) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.PERMISSION_DENIED,
+        );
+      }
+
+      const user = await this.userRepo.repo.findOne({ where: { id } });
+      if (!user) {
+        return ResponseDto.responseError(
+          UserService.name,
+          ErrorMap.USER_NOT_FOUND,
+        );
+      }
+
+      const saltRounds = 10;
+      const apiKey = await bcrypt.hash(user.username, saltRounds);
+      await this.userRepo.repo.update({ id }, { apiKey });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, { apiKey });
     } catch (error) {
       return ResponseDto.responseError(UserRepository.name, error);
     }

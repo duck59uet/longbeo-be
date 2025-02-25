@@ -26,4 +26,5 @@ export const URL_CONSTANTS = {
   ORDER_HISTORY: 'history',
   USER_ORDER_HISTORY: 'user/history/:address',
   UPDATE_USER_LEVEL: 'update-level',
+  GENERATE_API_KEY: 'generate-api-key',
 };

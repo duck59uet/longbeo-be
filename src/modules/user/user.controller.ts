@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/request/update-user.req';
 import { ChangePasswordDto } from './dto/request/change-password';
 import { AdminGetUsersRequestDto } from './dto/request/admin-get-user.req';
 import { Response } from 'express';
-import { DeleteUserRequestDto } from './dto/request/delete-user.req';
+import { UserIdRequestDto } from './dto/request/user-id.req';
 import { GetUserPathParamDto } from './dto/request/get-user.req';
 
 @Controller(CONTROLLER_CONSTANTS.USER)
@@ -152,7 +152,7 @@ export class UserController {
       schema: {},
     },
   })
-  async deteleAdmin(@Body() req: DeleteUserRequestDto) {
+  async deteleAdmin(@Body() req: UserIdRequestDto) {
     this.logger.log('========== Delete user ==========');
     return this.userService.deleteUser(req);
   }
@@ -170,5 +170,20 @@ export class UserController {
   async updateUserLevel(@Body() req: GetUserPathParamDto) {
     this.logger.log('========== Update user level ==========');
     return this.userService.updateUserLevel(req);
+  }
+
+  @CommonAuthPost({
+    url: URL_CONSTANTS.GENERATE_API_KEY,
+    summary: 'Generate API key',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'Generate API key',
+      schema: {},
+    },
+  })
+  async generateApiKey(@Body() req: UserIdRequestDto) {
+    this.logger.log('========== Generate API key ==========');
+    return this.userService.generateApiKey(req);
   }
 }

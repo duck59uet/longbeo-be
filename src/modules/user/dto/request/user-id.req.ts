@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class DeleteUserRequestDto {
+export class UserIdRequestDto {
   @ApiProperty({
     example: 'aafa-2fsa',
   })

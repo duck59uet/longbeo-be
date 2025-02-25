@@ -5,12 +5,22 @@ import { OrderModule } from '../order/order.module';
 import { BalanceModule } from '../balance/balance.module';
 import { ApiController } from './api.controller';
 import { ApiService } from './api.service';
+import { ServiceTimeModule } from '../service_time/service_time.module';
+import { ServiceModule } from '../service/service.module';
+import { UserModule } from '../user/user.module';
+import { UserLevelModule } from '../userLevel/userLevel.module';
+import { TelegramModule } from '../telegram/telegram.module';
 
 @Module({
   imports: [
-    forwardRef(() => TopupModule),
-    forwardRef(() => OrderModule),
-    forwardRef(() => BalanceModule),
+    TopupModule,
+    OrderModule,
+    BalanceModule,
+    ServiceTimeModule,
+    ServiceModule,
+    UserModule,
+    UserLevelModule,
+    TelegramModule
   ],
   controllers: [ApiController],
   providers: [ApiService],

@@ -73,4 +73,22 @@ export class ServiceTimeRepository {
       ]);
     return sql.execute();
   }
+
+  async getServices() {
+    const sql = this.repo
+      .createQueryBuilder('service_time')
+      .innerJoin(Service, 'service', 'service.id = service_time.serviceId')
+      .innerJoin(Category, 'category', 'category.id = service.categoryId')
+      .where('service_time.deletedAt IS NULL')
+      .andWhere('service.deletedAt IS NULL')
+      .andWhere('category.deletedAt IS NULL')
+      .select([
+        'service_time.id as id',
+        'service_time.time as time',
+        'service.name as "serviceName"',
+        'service.price as "rate"',
+        'category.name as "category"',
+      ]);
+    return sql.execute
+  }
 }

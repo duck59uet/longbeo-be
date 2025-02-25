@@ -38,4 +38,8 @@ export class User extends BaseEntityAutoId {
 
   @Column({ nullable: true })
   referUser: string;
+
+  @Exclude()
+  @Column({ nullable: true })
+  apiKey: string;
 }
