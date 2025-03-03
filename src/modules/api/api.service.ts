@@ -8,6 +8,7 @@ import { BalanceRepository } from '../balance/balance.repository';
 import { OrderRepository } from '../order/order.repository';
 import { TelegramService } from '../telegram/telegram.service';
 import { UserLevelRepository } from '../userLevel/userLevel.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class ApiService {
@@ -121,6 +122,36 @@ export class ApiService {
           return { error: 'Incorrect order ID' };
         }
         return { charge: (data.price / 26000).toFixed(2), status: data.status, currency: 'USD' };
+      }
+
+      if (action === 'orders') {
+        if (!orders) {
+          return { error: 'Incorrect order ID' };
+        }
+
+        // split ra mang number
+        const orderArr = orders.split(',');
+
+        const data = await this.orderRepo.repo.find({
+          where: { id: In(orderArr) },
+        });
+        if (!data) {
+          return { error: 'Incorrect order ID' };
+        }
+
+        const result = {};
+        data.forEach((item) => {
+          const orderItem = { charge: (item.price / 26000).toFixed(2), status: item.status, currency: 'USD' };
+          result[item.id] = orderItem;
+        });
+        return result;
+      }
+
+      if (action === 'balance') {
+        const userBalance = await this.balanceRepo.repo.findOne({
+          where: { user_id: user.id },
+        });
+        return { balance: (userBalance.balance / 26000), currency: 'USD' };
       }
 
       // return ResponseDto.response(ErrorMap.SUCCESSFUL, user);

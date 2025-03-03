@@ -9,7 +9,6 @@ import {
 } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { UpdateServiceDto } from './dto/update-service.req';
-import { UserRole } from '../../common/constants/app.constant';
 
 @Controller(CONTROLLER_CONSTANTS.SERVICE)
 @ApiTags(CONTROLLER_CONSTANTS.SERVICE)
