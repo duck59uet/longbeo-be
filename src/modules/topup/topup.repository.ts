@@ -63,7 +63,8 @@ export class TopupRepository {
         'topup.createdAt',
         'topup.sender',
         'admin.fullname',
-      ]);
+      ])
+      .orderBy('topup.createdAt', 'DESC');
 
     const [itemCount, data] = await Promise.all([
       sql.getCount(),
