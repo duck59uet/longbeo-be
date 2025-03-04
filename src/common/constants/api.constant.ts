@@ -10,6 +10,7 @@ export const CONTROLLER_CONSTANTS = {
   CATEGORY: 'category',
   USER_LEVEL: 'user_level',
   V2: 'api/v2',
+  NEWS: 'news',
 };
 export const URL_CONSTANTS = {
   CONNECT_WALLET: 'connect_wallet',

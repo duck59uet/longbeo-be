@@ -1,0 +1,17 @@
+import { Column, Entity } from 'typeorm';
+import { BaseEntityIncreNumberId } from '../../../common/entities';
+
+@Entity({ name: 'news' })
+export class News extends BaseEntityIncreNumberId {
+  @Column({ nullable: false, type: 'uuid' })
+  avatar: string;
+
+  @Column({ nullable: false })
+  title: string;
+
+  @Column({ nullable: true, type: 'jsonb' })
+  content: Object;
+
+  @Column({ nullable: true })
+  status: boolean;
+}

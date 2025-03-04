@@ -17,6 +17,7 @@ import { ServiceTimeModule } from './modules/service_time/service_time.module';
 import { CategoryModule } from './modules/category/category.module';
 import { UserLevelModule } from './modules/userLevel/userLevel.module';
 import { ApiModule } from './modules/api/api.module';
+import { NewsModule } from './modules/news/news.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { ApiModule } from './modules/api/api.module';
     CategoryModule,
     UserLevelModule,
     ApiModule,
+    NewsModule
   ],
   providers: [JwtStrategy],
   controllers: [],
