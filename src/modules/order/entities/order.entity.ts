@@ -16,10 +16,10 @@ export class Order extends BaseEntityIncreNumberId {
   @Column({ nullable: true })
   amount: number;
 
-  @Column({ nullable: false, type: 'float' })
+  @Column({ nullable: true, type: 'float4', default: 0 })
   price: number;
 
-  @Column({ nullable: false, type: 'float', default: 0 })
+  @Column({ nullable: true, type: 'float4', default: 0 })
   discount: number;
 
   @Column({ nullable: false })
