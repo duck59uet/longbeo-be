@@ -18,7 +18,7 @@ export class ServiceService {
   async getService(categoryId: number): Promise<ResponseDto<any>> {
     try {
       const data = await this.serviceRepo.repo.find({
-        where: { status: ServiceStatus.ACTIVE, categoryId },
+        where: { categoryId },
         order: { id: 'ASC' },
       });
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);
