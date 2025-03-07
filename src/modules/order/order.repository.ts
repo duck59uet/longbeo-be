@@ -67,7 +67,7 @@ export class OrderRepository {
         'service.price',
       ]);
 
-    if(categoryId) {
+    if(typeof categoryId !== 'undefined') {
       sql.andWhere('service.categoryId = :categoryId', { categoryId });
     }
 
