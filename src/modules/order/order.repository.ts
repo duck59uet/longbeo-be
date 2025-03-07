@@ -67,19 +67,23 @@ export class OrderRepository {
         'service.price',
       ]);
 
-    if(typeof categoryId !== 'undefined') {
+    if (typeof categoryId !== 'undefined') {
       sql.andWhere('service.categoryId = :categoryId', { categoryId });
     }
 
-    const [count, item] = await Promise.all([
-      sql.getCount(),
-      sql
-        .limit(limit)
-        .offset((page - 1) * limit)
-        .execute(),
+    // Tạo ra hai instance riêng biệt cho đếm và lấy dữ liệu
+    const countQuery = sql.clone();
+    const dataQuery = sql
+      .clone()
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    const [count, items] = await Promise.all([
+      countQuery.getCount(),
+      dataQuery.execute(),
     ]);
 
-    return [count, item];
+    return [count, items];
   }
 
   async getOrderById(userId: string): Promise<number> {
@@ -153,8 +157,8 @@ export class OrderRepository {
         'service.price as "servicePrice"',
         'category.name as "categoryName"',
       ]);
-    
-    if(search) {
+
+    if (search) {
       sql.andWhere('order.id = :search', { search: search });
     }
 
