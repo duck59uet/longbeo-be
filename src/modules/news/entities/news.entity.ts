@@ -3,7 +3,7 @@ import { BaseEntityIncreNumberId } from '../../../common/entities';
 
 @Entity({ name: 'news' })
 export class News extends BaseEntityIncreNumberId {
-  @Column({ nullable: false, type: 'uuid' })
+  @Column({ nullable: false })
   avatar: string;
 
   @Column({ nullable: false })
