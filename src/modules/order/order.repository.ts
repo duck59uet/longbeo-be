@@ -65,9 +65,9 @@ export class OrderRepository {
         'order.note',
         'service.name',
         'service.price',
-      ]);
+      ]).orderBy('order.createdAt', 'DESC');
 
-    if (typeof categoryId !== 'undefined') {
+    if (categoryId.toString() !== 'undefined') {
       sql.andWhere('service.categoryId = :categoryId', { categoryId });
     }
 
