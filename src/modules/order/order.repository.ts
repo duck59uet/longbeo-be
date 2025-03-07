@@ -46,13 +46,13 @@ export class OrderRepository {
   }
 
   async getUserOrder(userId: string, query: AdminGetOrderRequestDto) {
-    const { categoryId, page, limit } = query;
+    const { page, limit, categoryId } = query;
 
     const sql = this.repo
       .createQueryBuilder('order')
       .innerJoin(Service, 'service', 'service.id = order.service_id')
       .where('order.user_id = :userId', { userId })
-      .andWhere('service.categoryId = :categoryId', { categoryId })
+      // .andWhere('service.categoryId = :categoryId', { categoryId })
       .select([
         'order.id',
         'order.quantity',
@@ -66,6 +66,10 @@ export class OrderRepository {
         'service.name',
         'service.price',
       ]);
+
+    if(categoryId) {
+      sql.andWhere('service.categoryId = :categoryId', { categoryId });
+    }
 
     const [count, item] = await Promise.all([
       sql.getCount(),
