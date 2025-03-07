@@ -1,10 +1,11 @@
-import { Body, Controller, Logger } from '@nestjs/common';
+import { Body, Controller, Logger, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { NewsService } from './news.service';
-import { CommonAuthPost } from '../../decorators/common.decorator';
+import { CommonAuthGet, CommonAuthPost } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateNewsDto } from './dto/create-news.req';
+import { GetNewsRequestDto } from './dto/get-news.dto';
 
 @Controller(CONTROLLER_CONSTANTS.NEWS)
 @ApiTags(CONTROLLER_CONSTANTS.NEWS)
@@ -14,7 +15,7 @@ export class NewsController {
   constructor(private newsService: NewsService) {}
 
   @CommonAuthPost({
-    url: 'news/create',
+    url: 'create',
     summary: 'create news',
     apiOkResponseOptions: {
       status: 200,
@@ -28,7 +29,7 @@ export class NewsController {
   }
 
   @CommonAuthPost({
-    url: 'news/delete',
+    url: 'delete',
     summary: 'delete news',
     apiOkResponseOptions: {
       status: 200,
@@ -39,5 +40,19 @@ export class NewsController {
   })
   async deleteNews(@Body() body: { id: number }): Promise<ResponseDto<any>> {
     return this.newsService.deleteNews(body);
+  }
+
+  @CommonAuthGet({
+    url: 'get',
+    summary: 'get news',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'get news',
+      schema: {},
+    },
+  })
+  async getNews(@Query() req: GetNewsRequestDto): Promise<ResponseDto<any>> {
+    return this.newsService.getNews(req);
   }
 }

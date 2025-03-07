@@ -26,4 +26,21 @@ export class NewsRepository {
 
     return await this.repo.save(news);
   }
+
+  async getNews(page: number, limit: number) {
+    const sql = this.repo.createQueryBuilder('news').select([
+      'news.id',
+      'news.avatar',
+      'news.title',
+      'news.content',
+      'news.status',
+    ]);
+
+    if (page && limit) {
+      sql.offset((page - 1) * limit).limit(limit);
+    }
+
+    const [news, total] = await sql.getManyAndCount();
+    return { news, total };
+  }
 }
