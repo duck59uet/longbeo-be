@@ -15,6 +15,6 @@ export class News extends BaseEntityIncreNumberId {
   @Column({ nullable: true })
   status: boolean;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'categoryid' })
   categoryId: number;
 }
