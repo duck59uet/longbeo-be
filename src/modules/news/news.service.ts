@@ -4,6 +4,7 @@ import { ErrorMap } from '../../common/error.map';
 import { NewsRepository } from './news.repository';
 import { CreateNewsDto } from './dto/create-news.req';
 import { GetNewsRequestDto } from './dto/get-news.dto';
+import { UpdateNewsDto } from './dto/update-news.req';
 
 @Injectable()
 export class NewsService {
@@ -20,6 +21,17 @@ export class NewsService {
       const news = await this.newsRepo.createNews(body);
       return ResponseDto.response(ErrorMap.SUCCESSFUL, news);
     } catch (error) {
+      this.logger.error(error);
+      return ResponseDto.responseError(NewsService.name, error);
+    }
+  }
+
+  async updateNews(body: UpdateNewsDto): Promise<ResponseDto<any>> {
+    try {
+      const news = await this.newsRepo.updateNews(body);
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, news);
+    }
+    catch (error) {
       this.logger.error(error);
       return ResponseDto.responseError(NewsService.name, error);
     }
