@@ -2,10 +2,16 @@ import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { NewsService } from './news.service';
-import { Common, CommonAuthGet, CommonAuthPost, CommonGet } from '../../decorators/common.decorator';
+import {
+  Common,
+  CommonAuthGet,
+  CommonAuthPost,
+  CommonGet,
+} from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateNewsDto } from './dto/create-news.req';
 import { GetNewsRequestDto } from './dto/get-news.dto';
+import { UpdateNewsDto } from './dto/update-news.req';
 
 @Controller(CONTROLLER_CONSTANTS.NEWS)
 @ApiTags(CONTROLLER_CONSTANTS.NEWS)
@@ -26,6 +32,20 @@ export class NewsController {
   })
   async createNews(@Body() body: CreateNewsDto): Promise<ResponseDto<any>> {
     return this.newsService.createNews(body);
+  }
+
+  @CommonAuthPost({
+    url: 'update',
+    summary: 'update news',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'update news',
+      schema: {},
+    },
+  })
+  async updateNews(@Body() body: UpdateNewsDto): Promise<ResponseDto<any>> {
+    return this.newsService.updateNews(body);
   }
 
   @CommonAuthPost({
@@ -66,7 +86,9 @@ export class NewsController {
       schema: {},
     },
   })
-  async getNewsByCategory(@Param('categoryId') categoryId: number): Promise<ResponseDto<any>> {
+  async getNewsByCategory(
+    @Param('categoryId') categoryId: number,
+  ): Promise<ResponseDto<any>> {
     return this.newsService.getNewsByCategory(categoryId);
   }
 

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { News } from './entities/news.entity';
 import { CreateNewsDto } from './dto/create-news.req';
+import { UpdateNewsDto } from './dto/update-news.req';
 
 @Injectable()
 export class NewsRepository {
@@ -23,6 +24,20 @@ export class NewsRepository {
     news.title = createNewsDto.title;
     news.content = createNewsDto.content;
     news.status = true;
+
+    return await this.repo.save(news);
+  }
+
+  async updateNews(updateNewsDto: UpdateNewsDto): Promise<News> {
+    const news = await this.repo.findOne({ where: { id: updateNewsDto.id } });
+    if (!news) {
+      return null;
+    }
+
+    news.avatar = updateNewsDto.avatar;
+    news.title = updateNewsDto.title;
+    news.content = updateNewsDto.content;
+    news.status = updateNewsDto.status;
 
     return await this.repo.save(news);
   }
