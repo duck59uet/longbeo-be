@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { News } from './entities/news.entity';
 import { CreateNewsDto } from './dto/create-news.req';
 import { UpdateNewsDto } from './dto/update-news.req';
+import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class NewsRepository {
@@ -43,19 +44,30 @@ export class NewsRepository {
   }
 
   async getNews(page: number, limit: number) {
-    const sql = this.repo.createQueryBuilder('news').select([
-      'news.id',
-      'news.avatar',
-      'news.title',
-      'news.content',
-      'news.status',
-    ]);
-
+    // Tạo query builder chung
+    const qb = this.repo
+      .createQueryBuilder('news')
+      .innerJoin(Category, 'c', 'c.id = news.categoryid')
+      .select([
+        'news.id as id',
+        'news.avatar as avatar',
+        'news.title as title',
+        'news.content as content',
+        'news.status as status',
+        'c.name as category',
+      ]);
+  
+    // Clone query builder cho đếm tổng số bản ghi
+    const qbForCount = qb.clone();
+  
+    // Áp dụng phân trang cho query lấy dữ liệu
     if (page && limit) {
-      sql.offset((page - 1) * limit).limit(limit);
+      qb.offset((page - 1) * limit).limit(limit);
     }
-
-    const [news, total] = await sql.getManyAndCount();
+  
+    // Thực hiện đồng thời query lấy dữ liệu và đếm tổng số bản ghi
+    const [news, total] = await Promise.all([qb.execute(), qbForCount.getCount()]);
+  
     return { news, total };
   }
 }
