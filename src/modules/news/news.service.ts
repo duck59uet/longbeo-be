@@ -50,4 +50,14 @@ export class NewsService {
       return ResponseDto.responseError(NewsService.name, error);
     }
   }
+
+  async getNewsByCategory(categoryId: number): Promise<ResponseDto<any>> {
+    try {
+      const news = await this.newsRepo.repo.findOne({ where: { categoryId } });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, news);
+    } catch (error) {
+      this.logger.error(error);
+      return ResponseDto.responseError(NewsService.name, error);
+    }
+  }
 }
