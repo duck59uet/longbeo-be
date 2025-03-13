@@ -60,4 +60,14 @@ export class NewsService {
       return ResponseDto.responseError(NewsService.name, error);
     }
   }
+
+  async getNewsById(id: number): Promise<ResponseDto<any>> {
+    try {
+      const news = await this.newsRepo.repo.findOne({ where: { id } });
+      return ResponseDto.response(ErrorMap.SUCCESSFUL, news);
+    } catch (error) {
+      this.logger.error(error);
+      return ResponseDto.responseError(NewsService.name, error);
+    }
+  }
 }

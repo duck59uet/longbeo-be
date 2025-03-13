@@ -2,7 +2,7 @@ import { Body, Controller, Logger, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CONTROLLER_CONSTANTS } from '../../common/constants/api.constant';
 import { NewsService } from './news.service';
-import { CommonAuthGet, CommonAuthPost, CommonGet } from '../../decorators/common.decorator';
+import { Common, CommonAuthGet, CommonAuthPost, CommonGet } from '../../decorators/common.decorator';
 import { ResponseDto } from '../../common/dtos';
 import { CreateNewsDto } from './dto/create-news.req';
 import { GetNewsRequestDto } from './dto/get-news.dto';
@@ -68,5 +68,19 @@ export class NewsController {
   })
   async getNewsByCategory(@Param('categoryId') categoryId: number): Promise<ResponseDto<any>> {
     return this.newsService.getNewsByCategory(categoryId);
+  }
+
+  @CommonGet({
+    url: 'user/admin/:id',
+    summary: 'get all news',
+    apiOkResponseOptions: {
+      status: 200,
+      type: ResponseDto,
+      description: 'get all news',
+      schema: {},
+    },
+  })
+  async getNewsById(@Param('id') id: number): Promise<ResponseDto<any>> {
+    return this.newsService.getNewsById(id);
   }
 }
