@@ -39,4 +39,7 @@ export class Order extends BaseEntityIncreNumberId {
 
   @Column({ nullable: true })
   source_order_id: string;
+
+  @Column({ nullable: true, default: 0, name: 'start_count' })
+  start_count: number;
 }
