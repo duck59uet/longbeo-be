@@ -144,12 +144,12 @@ export class OrderProcessor {
                   if (result.data.status === OrderStatus.IN_PROGRESS) {
                     await this.orderRepo.repo.update(
                       { id: order.id },
-                      { status: OrderStatus.IN_PROGRESS, start_count: result.data.start_count },
+                      { status: OrderStatus.IN_PROGRESS, start_count: result.data.remains },
                     );
                   } else if (result.data.status === OrderStatus.COMPLETED) {
                     await this.orderRepo.repo.update(
                       { id: order.id },
-                      { status: OrderStatus.COMPLETED, start_count: result.data.start_count },
+                      { status: OrderStatus.COMPLETED, start_count: result.data.remains },
                     );
                   } else if (result.data.status === OrderStatus.CANCELED) {
                     await this.orderRepo.repo.update(
