@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class ExportCsvOrderDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  // @IsNumber()
-  categoryId: number;
+  @ApiProperty({required: false})
+  // @IsNotEmpty()
+  categoryId?: number;
 
   @ApiProperty()
   @IsNotEmpty()

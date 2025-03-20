@@ -10,6 +10,7 @@ import { OrderStatus } from '../../common/constants/app.constant';
 import { Order } from './entities/order.entity';
 import { ServiceRepository } from '../service/service.repository';
 import { ServiceTimeRepository } from '../service_time/service_time.repository';
+import { BalanceRepository } from '../balance/balance.repository';
 
 @Processor('order')
 export class OrderProcessor {
@@ -19,6 +20,7 @@ export class OrderProcessor {
     private orderRepo: OrderRepository,
     private readonly serviceRepo: ServiceRepository,
     private readonly serviceTimeRepo: ServiceTimeRepository,
+    private readonly balanceRepo: BalanceRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)
@@ -84,6 +86,14 @@ export class OrderProcessor {
                   await this.orderRepo.repo.update(
                     { id: order.id },
                     { status: OrderStatus.CANCELED },
+                  );
+
+                  const userBalance = await this.balanceRepo.repo.findOne({
+                    where: { user_id: order.user_id }});
+
+                  await this.balanceRepo.repo.update(
+                    { user_id: order.user_id },
+                    { balance: userBalance.balance + order.price - order.discount },
                   );
                 }
               } catch (error) {
@@ -155,6 +165,14 @@ export class OrderProcessor {
                     await this.orderRepo.repo.update(
                       { id: order.id },
                       { status: OrderStatus.CANCELED },
+                    );
+
+                    const userBalance = await this.balanceRepo.repo.findOne({
+                      where: { user_id: order.user_id }});
+
+                    await this.balanceRepo.repo.update(
+                      { user_id: order.user_id },
+                      { balance: userBalance.balance + order.price - order.discount },
                     );
                   }
                 }

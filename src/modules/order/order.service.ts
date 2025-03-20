@@ -71,7 +71,7 @@ export class OrderService {
 
       await this.balanceRepo.repo.update(
         { user_id: authInfo.id },
-        { balance: userBalance.balance - price - discount },
+        { balance: userBalance.balance - price + discount },
       );
 
       const data = await this.orderRepo.createOrder(
@@ -149,6 +149,7 @@ export class OrderService {
       const csvData = data.map((record: any) => ({
         'Tài khoản': record.username,
         'Link': record.link,
+        'Tên dịch vụ': record.categoryName,
         'Máy chủ': record.serviceName,
         'Số phút': record.amount,
         'Số mặt': record.quantity,

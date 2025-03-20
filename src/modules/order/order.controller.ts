@@ -111,7 +111,7 @@ export class OrderController {
       schema: {},
     },
   })
-  async exportTopupHistory(
+  async exportOrderHistory(
     @Query() query: ExportCsvOrderDto,
     @Res() res: Response,
   ) {

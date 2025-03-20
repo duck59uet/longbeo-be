@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntityIncreNumberId } from '../../../common/entities';
 import { OrderStatus } from '../../../common/constants/app.constant';
+import { Min } from 'class-validator';
 
 @Entity({ name: 'orders' })
 export class Order extends BaseEntityIncreNumberId {
@@ -11,6 +12,7 @@ export class Order extends BaseEntityIncreNumberId {
   link: string;
 
   @Column({ nullable: false })
+  @Min(20)
   quantity: number;
 
   @Column({ nullable: true })
