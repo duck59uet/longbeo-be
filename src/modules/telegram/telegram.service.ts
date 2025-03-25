@@ -18,21 +18,14 @@ export class TelegramService {
 
   async sendMessage(message: string): Promise<any> {
     try {
-      const url = `${this.apiUrl}/sendMessage`;
+      const url = `https://api.telegram.org/bot8152570356:AAFVKlTmZMV6PM8vo3AmYcv_wlp1b1gvYIs/sendMessage`;
       const response = await axios.post(url, {
         chat_id: -4609945257,
         text: message,
       });
       this.logger.log(`Tin nhắn đã gửi: ${JSON.stringify(response.data)}`);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        this.logger.error(
-          `Gửi tin nhắn thất bại: ${error.message} | Response: ${JSON.stringify(error.response?.data)}`
-        );
-      } else {
-        this.logger.error(`Gửi tin nhắn thất bại: ${error}`);
-      }
+      this.logger.error(`Gửi tin nhắn thất bại: ${error}`);
     }
   }
-
 }
