@@ -98,7 +98,7 @@ export class ApiService {
           discount,
         );
 
-        this.teleService.sendMessage(
+        await this.teleService.sendMessage(
           `Đã tạo đơn hàng mới: id: ${data.id} - Link: ${link} - ${
             user.username
           } - Server: ${server.name} - Số lượng: ${quantity} 

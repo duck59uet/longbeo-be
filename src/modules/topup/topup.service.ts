@@ -49,7 +49,7 @@ export class TopupService {
 
       const user = await this.userRepo.repo.findOne({ where: { id: createTopupDto.user_id } });
 
-      this.teleService.sendMessage(
+      await this.teleService.sendMessage(
         `Admin ${authInfo.username} đã nạp ${createTopupDto.amount} cho tài khoản ${user.username}`,
       );
       return ResponseDto.response(ErrorMap.SUCCESSFUL, data);

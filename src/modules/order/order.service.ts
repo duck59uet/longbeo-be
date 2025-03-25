@@ -84,7 +84,7 @@ export class OrderService {
         discount,
       );
 
-      this.teleService.sendMessage(
+      await this.teleService.sendMessage(
         `Đã tạo đơn hàng mới: id: ${data.id} - Link: ${createOrderDto.link} - ${authInfo.username} - Server: ${server.name} - Số lượng: ${quantity} 
         - Thời gian: ${serviceTimeInfo.time} - Thành tiền: ${price} - Giảm giá: ${discount} - Tổng tiền: ${price - discount}`,
       );
