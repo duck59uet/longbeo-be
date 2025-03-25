@@ -25,7 +25,14 @@ export class TelegramService {
       });
       this.logger.log(`Tin nhắn đã gửi: ${JSON.stringify(response.data)}`);
     } catch (error) {
-      this.logger.error(`Gửi tin nhắn thất bại: ${error}`);
+      if (axios.isAxiosError(error)) {
+        this.logger.error(
+          `Gửi tin nhắn thất bại: ${error.message} | Response: ${JSON.stringify(error.response?.data)}`
+        );
+      } else {
+        this.logger.error(`Gửi tin nhắn thất bại: ${error}`);
+      }
     }
   }
+
 }
