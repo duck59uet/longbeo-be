@@ -91,6 +91,7 @@ export class ServiceTimeRepository {
         'service.enName as "name"',
         'service.enPrice as "rate"',
         'category.name as "category"',
+        'service.status as "status"',
       ]);
     return sql.execute();
   }
